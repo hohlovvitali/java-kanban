@@ -56,13 +56,13 @@ class Epic extends Task{
     }
 
 
-    public String toString(HashMap<Integer, Subtask> subtaskHashMap) {
+    public String toString(Manager manager) {
         String outString = "Epic{" +
                 " taskName='" + taskName + '\'' +
                 ", taskID=" + taskID +
                 ", status='" + status + '\'' + '\n';
         for (Integer subtaskID: subtaskIDList){
-            outString = outString + subtaskHashMap.get(subtaskID).toString() + "\n";
+            outString = outString + manager.getSubtaskObjectByID(subtaskID).toString() + "\n";
         }
 
         outString += "}";

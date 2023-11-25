@@ -8,11 +8,11 @@ public class Main {
         ArrayList<String> taskStrings = new ArrayList<>();
         taskStrings.add("Подняться");
         taskStrings.add("Проснуться");
-        Task task1 = new Task("Первое задание", taskStrings);
+        Task task1 = new Task("Первое задание", taskStrings.get(0));
         manager.addTask(task1);
         ArrayList<String> taskStrings2 = new ArrayList<>();
         taskStrings2.add("Поесть");
-        Task task2 = new Task("Второе задание", taskStrings2);
+        Task task2 = new Task("Второе задание", taskStrings2.get(0));
         manager.addTask(task2);
 
         // Проверяем создание классов Epic
@@ -26,12 +26,12 @@ public class Main {
         ArrayList<String> subtaskStrings = new ArrayList<>();
         subtaskStrings.add("Яичница");
         subtaskStrings.add("Бекон");
-        Subtask subtask1 = new Subtask("Первое", subtaskStrings, epic1.getTaskID());
+        Subtask subtask1 = new Subtask("Первое", subtaskStrings.get(0), epic1.getTaskID());
         manager.addSubtask(subtask1);
         ArrayList<String> subtaskStrings2 = new ArrayList<>();
         subtaskStrings2.add("Дессерт");
         subtaskStrings2.add("Кофе");
-        Subtask subtask2 = new Subtask("Второе", subtaskStrings2, epic1.getTaskID());
+        Subtask subtask2 = new Subtask("Второе", subtaskStrings2.get(0), epic1.getTaskID());
         manager.addSubtask(subtask2);
 
         // Для epic2
@@ -39,7 +39,7 @@ public class Main {
         subtaskStrings3.add("Жим груди");
         subtaskStrings3.add("Жим ногами");
         subtaskStrings3.add("Становая тяга");
-        Subtask subtask3 = new Subtask("Силовая тренировка", subtaskStrings3, epic2.getTaskID());
+        Subtask subtask3 = new Subtask("Силовая тренировка", subtaskStrings3.get(0), epic2.getTaskID());
         manager.addSubtask(subtask3);
 
         ArrayList<String> statusList = new ArrayList<>();
@@ -57,21 +57,21 @@ public class Main {
             switch (command){
                 case 1:
                     // Вывод эпиков
-                    System.out.println(manager.epicHashMapToString());
+                    System.out.println(manager.getAllEpics());
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 2:
                     // Вывод Task
-                    System.out.println(manager.taskHashMapToString());
+                    System.out.println(manager.getAllTasks());
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 3:
                     //Вывод subtask
-                    System.out.println(manager.subtaskHashMapToString());
+                    System.out.println(manager.getAllSubtasks());
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 4:
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString());
                     System.out.println("----------------------------------------------------------------");
                     System.out.println(manager.getTaskObjectByID(task1.getTaskID()));
                     System.out.println("----------------------------------------------------------------");
@@ -85,9 +85,9 @@ public class Main {
                     System.out.println(manager.getEpicObjectByID(16));
                     break;
                 case 5:
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     subtask1.setStatus(statusList.get(1));
                     subtask3.setStatus(statusList.get(2));
@@ -95,38 +95,38 @@ public class Main {
                     manager.updateSubtask(subtask1);
                     manager.updateSubtask(subtask3);
                     manager.updateTask(task1);
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     break;
                 case 6:
                     manager.deleteAllSubtasks();
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     System.out.println(manager.getAllSubtasks());
-                    System.out.println(manager.subtaskHashMapToString());
+                    System.out.println(manager.getAllSubtasks());
                     break;
                 case 7:
                     manager.deleteAllEpics();
                     manager.deleteAllTasks();
                     System.out.println(manager.getAllEpics());
                     System.out.println(manager.getAllTasks());
-                    System.out.println(manager.epicHashMapToString());
-                    System.out.println(manager.taskHashMapToString());
+                    System.out.println(manager.getAllEpics());
+                    System.out.println(manager.getAllTasks());
                     break;
                 case 8:
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     manager.deleteSubtask(subtask1.getTaskID());
                     manager.deleteTask(task1.getTaskID());
                     manager.deleteSubtask(subtask3.getTaskID());
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager.getSubtaskHashMap()));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 9:

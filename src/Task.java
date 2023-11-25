@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-
 class Task {
     protected String taskName;
-    protected ArrayList<String> taskDescription;
+    protected String taskDescription;
     protected int taskID;
     protected String status;
 
@@ -16,10 +14,9 @@ class Task {
         this.status = task.status;
     }
 
-    public Task(String taskName, ArrayList<String> taskDescription) {
+    public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
-        this.taskID = 0;
         this.status = "NEW";
     }
 
