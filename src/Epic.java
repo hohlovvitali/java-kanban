@@ -7,7 +7,7 @@ class Epic extends Task{
     public Epic(String taskName) {
         this.taskName = taskName;
         this.subtaskIDList = new ArrayList<>();
-        this.status = "NEW";
+        this.status = TaskStatus.NEW;
         this.taskID = 0;
     }
 
@@ -27,24 +27,24 @@ class Epic extends Task{
 
     public void checkEpicStatus(HashMap<Integer, Subtask> subtaskHashMap){
         if (subtaskIDList.isEmpty()){
-            this.status = "NEW";
+            this.status = TaskStatus.NEW;
             return;
         }
 
         for (Integer subtaskID: subtaskIDList){
-            if (!subtaskHashMap.get(subtaskID).getStatus().equals("NEW")) {
-                this.status = "IN_PROGRESS";
+            if (subtaskHashMap.get(subtaskID).getStatus() != TaskStatus.NEW) {
+                this.status = TaskStatus.IN_PROGRESS;
                 break;
             }
         }
 
         for (Integer subtaskID: subtaskIDList){
-            if (!subtaskHashMap.get(subtaskID).getStatus().equals("DONE")) {
+            if (subtaskHashMap.get(subtaskID).getStatus() != TaskStatus.DONE) {
                 return;
             }
         }
 
-        this.status = "DONE";
+        this.status = TaskStatus.DONE;
     }
 
     public void deleteAllSubtaskID(){
@@ -56,16 +56,16 @@ class Epic extends Task{
     }
 
 
-    public String toString(Manager manager) {
+    public String toString(InMemoryTaskManager manager) {
         String outString = "Epic{" +
                 " taskName='" + taskName + '\'' +
                 ", taskID=" + taskID +
                 ", status='" + status + '\'' + '\n';
         for (Integer subtaskID: subtaskIDList){
-            outString = outString + manager.getSubtaskObjectByID(subtaskID).toString() + "\n";
+            outString = outString + manager.getSubtaskObjectByIDNotMemory(subtaskID).toString();
         }
 
-        outString += "}";
+        outString += "}\n";
 
         return outString;
     }

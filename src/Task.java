@@ -2,7 +2,7 @@ class Task {
     protected String taskName;
     protected String taskDescription;
     protected int taskID;
-    protected String status;
+    protected TaskStatus status;
 
     public Task(){
     }
@@ -17,14 +17,14 @@ class Task {
     public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
-        this.status = "NEW";
+        this.status = TaskStatus.NEW;
     }
 
-    protected String getStatus(){
+    protected TaskStatus getStatus(){
         return status;
     }
-    protected void setStatus(String status) {
-        if (status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("DONE")) {
+    protected void setStatus(TaskStatus status) {
+        if (status == TaskStatus.NEW || status == TaskStatus.IN_PROGRESS || status == TaskStatus.DONE) {
             this.status = status;
             return;
         }
@@ -46,6 +46,6 @@ class Task {
                 ",\ntaskDescription=" + taskDescription +
                 ",\ntaskID=" + taskID +
                 ", status='" + status + '\'' +
-                '}';
+                "}\n";
     }
 }

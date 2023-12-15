@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         // Проверяем создание классов Task
         ArrayList<String> taskStrings = new ArrayList<>();
         taskStrings.add("Подняться");
@@ -41,11 +41,6 @@ public class Main {
         subtaskStrings3.add("Становая тяга");
         Subtask subtask3 = new Subtask("Силовая тренировка", subtaskStrings3.get(0), epic2.getTaskID());
         manager.addSubtask(subtask3);
-
-        ArrayList<String> statusList = new ArrayList<>();
-        statusList.add("NEW");
-        statusList.add("IN_PROGRESS");
-        statusList.add("DONE");
 
         Scanner scanner = new Scanner(System.in);
         while (true){
@@ -89,17 +84,24 @@ public class Main {
                     System.out.println("----------------------------------------------------------------");
                     System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
-                    subtask1.setStatus(statusList.get(1));
-                    subtask3.setStatus(statusList.get(2));
-                    task1.setStatus(statusList.get(1));
+                    subtask1.setStatus(TaskStatus.IN_PROGRESS);
+                    subtask3.setStatus(TaskStatus.DONE);
+                    task1.setStatus(TaskStatus.IN_PROGRESS);
                     manager.updateSubtask(subtask1);
                     manager.updateSubtask(subtask3);
                     manager.updateTask(task1);
                     System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
+                    System.out.println("----------------------------------------------------------------");
                     break;
                 case 6:
+                    System.out.println(manager.getHistory());
+                    System.out.println("----------------------------------------------------------------");
+                    System.out.println("Размер истории: " + manager.getHistory().size());
+                    System.out.println("----------------------------------------------------------------");
+                    break;
+                case 7:
                     manager.deleteAllSubtasks();
                     System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
@@ -108,7 +110,7 @@ public class Main {
                     System.out.println(manager.getAllSubtasks());
                     System.out.println(manager.getAllSubtasks());
                     break;
-                case 7:
+                case 8:
                     manager.deleteAllEpics();
                     manager.deleteAllTasks();
                     System.out.println(manager.getAllEpics());
@@ -116,7 +118,7 @@ public class Main {
                     System.out.println(manager.getAllEpics());
                     System.out.println(manager.getAllTasks());
                     break;
-                case 8:
+                case 9:
                     System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
@@ -129,7 +131,7 @@ public class Main {
                     System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
                     System.out.println("----------------------------------------------------------------");
                     break;
-                case 9:
+                case 0:
                     scanner.close();
                     return;
                 default:
@@ -145,9 +147,10 @@ public class Main {
         System.out.println("3 - Вывод Subtask");
         System.out.println("4 - Проверка на вывод по идентификатору");
         System.out.println("5 - Обновление статусов");
-        System.out.println("6 - Удаление всех Subtask");
-        System.out.println("7 - Удаление всего");
-        System.out.println("8 - Удаление по идентификатору");
-        System.out.println("9 - Выход");
+        System.out.println("6 - История просмотра задач");
+        System.out.println("7 - Удаление всех Subtask");
+        System.out.println("8 - Удаление всего");
+        System.out.println("9 - Удаление по идентификатору");
+        System.out.println("0 - Выход");
     }
 }

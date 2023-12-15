@@ -26,6 +26,6 @@ class Subtask extends Task{
                 ",\ntaskDescription=" + taskDescription +
                 ",\ntaskID=" + taskID +
                 ", status='" + status + '\'' +
-                '}';
+                "}\n";
     }
 }
