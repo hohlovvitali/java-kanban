@@ -1,4 +1,6 @@
-class Task {
+package tasktype;
+
+public class Task {
     protected String taskName;
     protected String taskDescription;
     protected int taskID;
@@ -23,7 +25,7 @@ class Task {
     protected TaskStatus getStatus(){
         return status;
     }
-    protected void setStatus(TaskStatus status) {
+    public void setStatus(TaskStatus status) {
         if (status == TaskStatus.NEW || status == TaskStatus.IN_PROGRESS || status == TaskStatus.DONE) {
             this.status = status;
             return;
@@ -31,17 +33,17 @@ class Task {
         System.out.println("Некорректный статус");
     }
 
-    protected int getTaskID(){
+    public int getTaskID(){
         return taskID;
     }
 
-    protected void setTaskID(int taskID){
+    public void setTaskID(int taskID){
         this.taskID = taskID;
     }
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "task.Task{" +
                 "taskName='" + taskName + '\'' +
                 ",\ntaskDescription=" + taskDescription +
                 ",\ntaskID=" + taskID +

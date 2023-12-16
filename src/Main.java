@@ -1,10 +1,17 @@
+import manager.Managers;
+import manager.taskmanager.InMemoryTaskManager;
+import tasktype.Epic;
+import tasktype.Subtask;
+import tasktype.Task;
+import tasktype.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
-        // Проверяем создание классов Task
+        // Проверяем создание классов task.Task
         ArrayList<String> taskStrings = new ArrayList<>();
         taskStrings.add("Подняться");
         taskStrings.add("Проснуться");
@@ -15,13 +22,13 @@ public class Main {
         Task task2 = new Task("Второе задание", taskStrings2.get(0));
         manager.addTask(task2);
 
-        // Проверяем создание классов Epic
+        // Проверяем создание классов task.Epic
         Epic epic1 = new Epic("Важный завтрак");
         Epic epic2 = new Epic("Важная тренировка");
         manager.addEpic(epic1);
         manager.addEpic(epic2);
 
-        // Проверяем создание классов Subtask
+        // Проверяем создание классов task.Subtask
         // Для epic1
         ArrayList<String> subtaskStrings = new ArrayList<>();
         subtaskStrings.add("Яичница");
@@ -56,7 +63,7 @@ public class Main {
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 2:
-                    // Вывод Task
+                    // Вывод task.Task
                     System.out.println(manager.getAllTasks());
                     System.out.println("----------------------------------------------------------------");
                     break;
@@ -142,13 +149,13 @@ public class Main {
 
     private static void printMenu() {
         System.out.println("Команды меню:");
-        System.out.println("1 - Вывод Epic");
-        System.out.println("2 - Вывод Task");
-        System.out.println("3 - Вывод Subtask");
+        System.out.println("1 - Вывод task.Epic");
+        System.out.println("2 - Вывод task.Task");
+        System.out.println("3 - Вывод task.Subtask");
         System.out.println("4 - Проверка на вывод по идентификатору");
         System.out.println("5 - Обновление статусов");
         System.out.println("6 - История просмотра задач");
-        System.out.println("7 - Удаление всех Subtask");
+        System.out.println("7 - Удаление всех task.Subtask");
         System.out.println("8 - Удаление всего");
         System.out.println("9 - Удаление по идентификатору");
         System.out.println("0 - Выход");

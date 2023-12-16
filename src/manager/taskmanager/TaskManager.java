@@ -1,8 +1,13 @@
+package manager.taskmanager;
+
+import tasktype.Epic;
+import tasktype.Subtask;
+import tasktype.Task;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-interface TaskManager {
+public interface TaskManager {
 
     void addTask(Task task);
 

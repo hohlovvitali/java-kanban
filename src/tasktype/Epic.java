@@ -1,7 +1,11 @@
+package tasktype;
+
+import manager.taskmanager.InMemoryTaskManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class Epic extends Task{
+public class Epic extends Task {
     private ArrayList<Integer> subtaskIDList;
 
     public Epic(String taskName) {
@@ -57,7 +61,7 @@ class Epic extends Task{
 
 
     public String toString(InMemoryTaskManager manager) {
-        String outString = "Epic{" +
+        String outString = "task.Epic{" +
                 " taskName='" + taskName + '\'' +
                 ", taskID=" + taskID +
                 ", status='" + status + '\'' + '\n';

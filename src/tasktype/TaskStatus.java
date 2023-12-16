@@ -1,3 +1,5 @@
+package tasktype;
+
 public enum TaskStatus {
     NEW,
     IN_PROGRESS,

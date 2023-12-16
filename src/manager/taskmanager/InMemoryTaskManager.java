@@ -1,12 +1,20 @@
+package manager.taskmanager;
+
+import manager.historymanager.HistoryManager;
+import manager.Managers;
+import tasktype.Epic;
+import tasktype.Subtask;
+import tasktype.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InMemoryTaskManager implements TaskManager{
+public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> taskHashMap;
     private final HashMap<Integer, Subtask> subtaskHashMap;
     private final HashMap<Integer, Epic> epicHashMap;
-    private final InMemoryHistoryManager taskMemory = (InMemoryHistoryManager) Managers.getDefaultHistory();
+    private final HistoryManager taskMemory = Managers.getDefaultHistory();
     private int idCreator = 0;
 
     public InMemoryTaskManager(){
