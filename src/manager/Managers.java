@@ -1,9 +1,7 @@
 package manager;
 
-import manager.historymanager.HistoryManager;
-import manager.historymanager.InMemoryHistoryManager;
-import manager.taskmanager.InMemoryTaskManager;
-import manager.taskmanager.TaskManager;
+import manager.historymanager.*;
+import manager.taskmanager.*;
 
 public class Managers {
     public static TaskManager getDefault(){

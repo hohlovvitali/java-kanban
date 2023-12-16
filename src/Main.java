@@ -1,9 +1,6 @@
 import manager.Managers;
 import manager.taskmanager.InMemoryTaskManager;
-import tasktype.Epic;
-import tasktype.Subtask;
-import tasktype.Task;
-import tasktype.TaskStatus;
+import tasktype.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;

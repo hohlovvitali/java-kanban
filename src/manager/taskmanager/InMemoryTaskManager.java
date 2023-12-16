@@ -2,9 +2,7 @@ package manager.taskmanager;
 
 import manager.historymanager.HistoryManager;
 import manager.Managers;
-import tasktype.Epic;
-import tasktype.Subtask;
-import tasktype.Task;
+import tasktype.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
