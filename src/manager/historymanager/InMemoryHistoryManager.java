@@ -2,21 +2,67 @@ package manager.historymanager;
 
 import tasktype.Task;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final LinkedList<Task> taskHistory = new LinkedList<>();
+    private final HashMap<Integer, Node<Task>> taskHistory = new HashMap<>();
+
+    private Node<Task> head;
+
+    private Node<Task> tail;
     @Override
-    public void add(Task task) {
-        if(taskHistory.size() == 10) {
-            taskHistory.removeFirst();
+    public void add(Task task){
+        remove(task.getTaskID());
+        Node<Task> newNode = linklast(task);
+        if (head == null){
+            head = newNode;
         }
-        taskHistory.addLast(task);
+        taskHistory.put(task.getTaskID(), newNode);
     }
 
+    private Node<Task> linklast(Task task){
+        Node<Task> newTail = new Node<>(task, this.tail);
+        if(this.tail != null){
+            this.tail.setNext(newTail);
+        }
+        this.tail = newTail;
+        return newTail;
+    }
     @Override
-    public List<Task> getHistory() {
-        return taskHistory;
+    public void remove(int id){
+        if (taskHistory.containsKey(id)){
+            Node<Task> currentNode = taskHistory.get(id);
+            if (currentNode.getPrev() == null){
+                head = currentNode.getNext();
+            }
+
+            if (currentNode.getNext() == null){
+                tail = currentNode.getPrev();
+            }
+            Node.removeNode(currentNode);
+            taskHistory.remove(id);
+        }
+    }
+    @Override
+    public List<Task> getTasks() {
+        List<Task> tasksList = new ArrayList<>();
+        Node<Task> currentNode= head;
+        while (currentNode != null){
+            tasksList.add(currentNode.getData());
+            currentNode = currentNode.getNext();
+        }
+
+        return tasksList;
+    }
+
+
+    public Node<Task> getHead() {
+        return head;
+    }
+
+    public Node<Task> getTail() {
+        return tail;
     }
 }

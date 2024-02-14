@@ -92,11 +92,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks(){
+        for (Task task: taskHashMap.values()){
+            taskMemory.remove(task.getTaskID());
+        }
+
         taskHashMap.clear();
     }
 
     @Override
     public void deleteAllSubtasks(){
+        for (Subtask subtask: subtaskHashMap.values()){
+            taskMemory.remove(subtask.getTaskID());
+        }
+
         subtaskHashMap.clear();
         for (Epic epic: epicHashMap.values()){
             epic.deleteAllSubtaskID();
@@ -105,23 +113,40 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics(){
+        this.deleteAllSubtasks();
+
+        for (Epic epic: epicHashMap.values()){
+            this.deleteEpicById(epic.getTaskID());
+        }
+
         epicHashMap.clear();
     }
 
     @Override
-    public void deleteTask(int taskID){
+    public void deleteTaskById(int taskID){
+        taskMemory.remove(taskID);
         taskHashMap.remove(taskID);
     }
 
     @Override
-    public void deleteSubtask(int taskID){
+    public void deleteSubtaskById(int taskID){
+        taskMemory.remove(taskID);
         epicHashMap.get(subtaskHashMap.get(taskID).getEpicID()).deleteSubtaskID(taskID);
         epicHashMap.get(subtaskHashMap.get(taskID).getEpicID()).checkEpicStatus(subtaskHashMap);
         subtaskHashMap.remove(taskID);
     }
 
     @Override
-    public void deleteEpic(int taskID){
+    public void deleteEpicById(int taskID){
+        if (!epicHashMap.containsKey(taskID)){
+            return;
+        }
+        ArrayList<Integer> subtaskIDList = new ArrayList<>(epicHashMap.get(taskID).getSubtaskIDList());
+        for (Integer subtaskID: subtaskIDList){
+            this.deleteSubtaskById(subtaskID);
+        }
+
+        taskMemory.remove(taskID);
         epicHashMap.remove(taskID);
     }
 
@@ -142,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory(){
-        return taskMemory.getHistory();
+        return taskMemory.getTasks();
     }
 }
 

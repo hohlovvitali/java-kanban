@@ -31,11 +31,11 @@ public interface TaskManager {
 
     void deleteAllEpics();
 
-    void deleteTask(int taskID);
+    void deleteTaskById(int taskID);
 
-    void deleteSubtask(int taskID);
+    void deleteSubtaskById(int taskID);
 
-    void deleteEpic(int taskID);
+    void deleteEpicById(int taskID);
 
     ArrayList<Task> getAllTasks();
 
