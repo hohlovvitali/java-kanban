@@ -29,13 +29,6 @@ public class Main {
         manager.addSubtask(subtask2);
         manager.addSubtask(subtask3);
 
-        // Для epic2
-//        ArrayList<String> subtaskStrings3 = new ArrayList<>();
-//        subtaskStrings3.add("Жим груди");
-//        subtaskStrings3.add("Жим ногами");
-//        subtaskStrings3.add("Становая тяга");
-//        Subtask subtask3 = new Subtask("Силовая тренировка", subtaskStrings3.get(0), epic2.getTaskID());
-//        manager.addSubtask(subtask3);
 
         Scanner scanner = new Scanner(System.in);
         while (true){
