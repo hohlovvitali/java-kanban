@@ -1,0 +1,11 @@
+id,type,name,status,description,epic
+1,EPIC,Важный завтрак,IN_PROGRESS,null
+2,EPIC,Важная тренировка,DONE,null
+3,TASK,Подняться,NEW,Первое задание
+4,TASK,Проснуться,NEW,Второе задание
+5,SUBTASK,Яичница,IN_PROGRESS,Первое,1
+6,SUBTASK,Бекон,NEW,Второе,1
+7,SUBTASK,Кофе,NEW,Третье,1
+8,SUBTASK,Отжимания,DONE,4 подхода,2
+
+1,2,3,4,7,6,5

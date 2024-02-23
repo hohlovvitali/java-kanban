@@ -13,12 +13,18 @@ public class Epic extends Task {
         this.subtaskIDList = new ArrayList<>();
         this.status = TaskStatus.NEW;
         this.taskID = 0;
+        this.taskType = TaskType.EPIC;
     }
 
     public Epic(Epic epic) {
         this.taskName = epic.taskName;
         this.status = epic.status;
         this.taskID = epic.taskID;
+    }
+
+    public Epic(int taskID, TaskType taskType, String taskName, TaskStatus taskStatus, String taskDescription) {
+        super(taskID, taskType, taskName, taskStatus, taskDescription);
+        this.subtaskIDList = new ArrayList<>();
     }
 
     public ArrayList<Integer> getSubtaskIDList() {
@@ -59,6 +65,10 @@ public class Epic extends Task {
         this.subtaskIDList.remove(subtaskIDList.indexOf(subtaskID));
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
     public String toString(InMemoryTaskManager manager) {
         String outString = "task.Epic{" +
