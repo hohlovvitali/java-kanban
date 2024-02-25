@@ -29,10 +29,6 @@ public class Task {
         this.status = taskStatus;
     }
 
-    protected TaskStatus getStatus(){
-        return status;
-    }
-
     public void setStatus(TaskStatus status) {
         if (status == TaskStatus.NEW || status == TaskStatus.IN_PROGRESS || status == TaskStatus.DONE) {
             this.status = status;
@@ -71,5 +67,9 @@ public class Task {
     @Override
     public String toString() {
         return taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
+    }
+
+    protected TaskStatus getStatus(){
+        return status;
     }
 }
