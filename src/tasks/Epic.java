@@ -1,4 +1,4 @@
-package tasktype;
+package tasks;
 
 import manager.taskmanager.InMemoryTaskManager;
 
@@ -13,7 +13,6 @@ public class Epic extends Task {
         this.subtaskIDList = new ArrayList<>();
         this.status = TaskStatus.NEW;
         this.taskID = 0;
-        this.taskType = TaskType.EPIC;
     }
 
     public Epic(Epic epic) {
@@ -22,8 +21,8 @@ public class Epic extends Task {
         this.taskID = epic.taskID;
     }
 
-    public Epic(int taskID, TaskType taskType, String taskName, TaskStatus taskStatus, String taskDescription) {
-        super(taskID, taskType, taskName, taskStatus, taskDescription);
+    public Epic(int taskID, String taskName, TaskStatus taskStatus, String taskDescription) {
+        super(taskID, taskName, taskStatus, taskDescription);
         this.subtaskIDList = new ArrayList<>();
     }
 
@@ -82,5 +81,15 @@ public class Epic extends Task {
         outString += "}\n";
 
         return outString;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        Epic task = (Epic) o;
+        return this.taskName.equals(task.taskName) && this.taskID == task.getTaskID() && this.status == task.status &&
+                this.subtaskIDList.equals(task.getSubtaskIDList());
     }
 }

@@ -8,4 +8,4 @@ id,type,name,status,description,epic
 7,SUBTASK,Кофе,NEW,Третье,1
 8,SUBTASK,Отжимания,DONE,4 подхода,2
 
-1,2,3,4,7,6,5
+3,4,7,6,5,1,2

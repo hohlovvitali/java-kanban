@@ -1,7 +1,7 @@
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
 import manager.taskmanager.InMemoryTaskManager;
-import tasktype.*;
+import tasks.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;

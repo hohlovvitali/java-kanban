@@ -1,12 +1,10 @@
-package tasktype;
+package tasks;
 
 public class Task {
     protected String taskName;
     protected String taskDescription;
     protected int taskID;
     protected TaskStatus status;
-
-    protected TaskType taskType;
 
     public Task(){
     }
@@ -16,22 +14,19 @@ public class Task {
         this.taskDescription = task.taskDescription;
         this.taskID = task.taskID;
         this.status = task.status;
-        this.taskType = task.taskType;
     }
 
     public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.status = TaskStatus.NEW;
-        this.taskType = TaskType.TASK;
     }
 
-    public Task(int taskID, TaskType taskType, String taskName, TaskStatus taskStatus, String taskDescription) {
+    public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskID = taskID;
         this.status = taskStatus;
-        this.taskType = taskType;
     }
 
     protected TaskStatus getStatus(){
@@ -51,14 +46,30 @@ public class Task {
     }
 
     public TaskType getTaskType() {
-        return taskType;
+        if (this.getClass() == Epic.class){
+            return TaskType.EPIC;
+        } else if (this.getClass() == Subtask.class) {
+            return TaskType.SUBTASK;
+        } else {
+            return TaskType.TASK;
+        }
     }
     public void setTaskID(int taskID){
         this.taskID = taskID;
     }
 
     @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return this.taskName.equals(task.taskName) && this.taskDescription.equals(task.taskDescription) &&
+                this.taskID == task.getTaskID() && this.status == task.status;
+    }
+
+    @Override
     public String toString() {
-        return taskID + "," + taskType + "," + taskName + "," + status + "," + taskDescription;
+        return taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
     }
 }

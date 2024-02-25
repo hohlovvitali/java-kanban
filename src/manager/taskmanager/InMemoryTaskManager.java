@@ -3,7 +3,7 @@ package manager.taskmanager;
 import manager.historymanager.HistoryManager;
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
-import tasktype.*;
+import tasks.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,16 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskHashMap = new HashMap<>();
         epicHashMap = new HashMap<>();
         tasksIDList = new ArrayList<>();
+    }
+
+    public Task getTask(int taskID){
+        if (taskHashMap.containsKey(taskID)){
+            return taskHashMap.get(taskID);
+        } else if (epicHashMap.containsKey(taskID)) {
+            return epicHashMap.get(taskID);
+        } else {
+            return subtaskHashMap.get(taskID);
+        }
     }
 
     @Override
@@ -57,24 +67,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) throws ManagerSaveException {
-        taskHashMap.put(subtask.getTaskID(), subtask);
+        subtaskHashMap.put(subtask.getTaskID(), subtask);
         epicHashMap.get(subtask.getEpicID()).checkEpicStatus(subtaskHashMap);
     }
 
     @Override
     public void updateEpic(Epic epic) throws ManagerSaveException {
-        taskHashMap.put(epic.getTaskID(), epic);
+        epicHashMap.put(epic.getTaskID(), epic);
     }
 
-    public Task getTask(int taskID){
-        if (taskHashMap.containsKey(taskID)){
-            return taskHashMap.get(taskID);
-        } else if (epicHashMap.containsKey(taskID)) {
-            return epicHashMap.get(taskID);
-        } else {
-            return subtaskHashMap.get(taskID);
-        }
-    }
     @Override
     public Epic getEpicObjectByID(int epicID) throws ManagerSaveException {
         if (epicHashMap.containsKey(epicID)){
@@ -187,5 +188,6 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory(){
         return taskMemory.getTasks();
     }
+
 }
 

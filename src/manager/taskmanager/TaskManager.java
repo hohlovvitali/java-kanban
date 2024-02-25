@@ -1,7 +1,7 @@
 package manager.taskmanager;
 
 import manager.managerexception.ManagerSaveException;
-import tasktype.*;
+import tasks.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,4 +45,6 @@ public interface TaskManager {
     ArrayList<Epic> getAllEpics();
 
     List<Task> getHistory();
+
+    boolean equals(Object o);
 }

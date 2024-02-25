@@ -1,6 +1,8 @@
 package manager.historymanager;
 
-import tasktype.Task;
+import manager.taskmanager.FileBackedTasksManager;
+import manager.taskmanager.InMemoryTaskManager;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +71,15 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tail;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        InMemoryHistoryManager taskManager = (InMemoryHistoryManager) o;
+        return this.taskHistory.equals(taskManager.taskHistory) && this.tail.equals(taskManager.tail) &&
+                this.head.equals(taskManager.head);
+    }
     public static class Node<E> {
         private E data;
         private Node<E> prev;
@@ -116,6 +127,15 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else if (task.getPrev() != null){
                 task.getPrev().setNext(null);
             }
+        }
+
+        @Override
+        public boolean equals(Object o){
+            if (this == o) return true;
+            if (o == null) return false;
+            if (this.getClass() != o.getClass()) return false;
+            Node<E> node = (Node<E>) o;
+            return this.data.equals(node.data) && this.next.equals(node.next) && this.prev.equals(node.prev);
         }
     }
 }
