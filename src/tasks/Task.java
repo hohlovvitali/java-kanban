@@ -34,6 +34,7 @@ public class Task {
             this.status = status;
             return;
         }
+
         System.out.println("Некорректный статус");
     }
 
@@ -69,7 +70,7 @@ public class Task {
         return taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
     }
 
-    protected TaskStatus getStatus(){
+    public TaskStatus getStatus(){
         return status;
     }
 }

@@ -20,6 +20,8 @@ public interface TaskManager {
 
     void updateEpic(Epic epic) throws ManagerSaveException;
 
+    Task getTask(int taskID);
+
     Epic getEpicObjectByID(int epicID) throws ManagerSaveException;
 
     Task getTaskObjectByID(int taskID) throws ManagerSaveException;

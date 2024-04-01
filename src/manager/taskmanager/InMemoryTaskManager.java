@@ -2,6 +2,7 @@ package manager.taskmanager;
 
 import manager.historymanager.HistoryManager;
 import manager.Managers;
+import manager.historymanager.InMemoryHistoryManager;
 import manager.managerexception.ManagerSaveException;
 import tasks.*;
 
@@ -23,7 +24,7 @@ public class InMemoryTaskManager implements TaskManager {
         epicHashMap = new HashMap<>();
         tasksIDList = new ArrayList<>();
     }
-
+    @Override
     public Task getTask(int taskID){
         if (taskHashMap.containsKey(taskID)){
             return taskHashMap.get(taskID);
@@ -131,7 +132,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() throws ManagerSaveException {
         this.deleteAllSubtasks();
 
-        for (Epic epic: epicHashMap.values()){
+        ArrayList<Epic> epicArrayList = this.getAllEpics();
+        for (Epic epic: epicArrayList){
             this.deleteEpicById(epic.getTaskID());
         }
 
@@ -164,8 +166,8 @@ public class InMemoryTaskManager implements TaskManager {
             this.deleteSubtaskById(subtaskID);
         }
 
-        taskMemory.remove(taskID);
-        epicHashMap.remove(taskID);
+        taskMemory.remove(Integer.valueOf(taskID));
+        epicHashMap.remove(Integer.valueOf(taskID));
         tasksIDList.remove(Integer.valueOf(taskID));
     }
 
@@ -187,6 +189,18 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory(){
         return taskMemory.getTasks();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null) return false;
+        if (this.getClass() != o.getClass()) return false;
+        InMemoryTaskManager tasksManager = (InMemoryTaskManager) o;
+        return this.epicHashMap.equals(tasksManager.epicHashMap) &&
+                this.taskHashMap.equals(tasksManager.taskHashMap) &&
+                this.subtaskHashMap.equals(tasksManager.subtaskHashMap) &&
+                this.getHistory().equals(tasksManager.getHistory());
     }
 
 }
