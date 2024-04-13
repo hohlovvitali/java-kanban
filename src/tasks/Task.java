@@ -1,25 +1,35 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
 public class Task {
     protected String taskName;
     protected String taskDescription;
     protected int taskID;
     protected TaskStatus status;
+    protected Instant startTime;
+    protected Duration duration;
 
-    public Task(){
-    }
-
-    public Task(Task task) {
-        this.taskName = task.taskName;
-        this.taskDescription = task.taskDescription;
-        this.taskID = task.taskID;
-        this.status = task.status;
-    }
 
     public Task(String taskName, String taskDescription) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.status = TaskStatus.NEW;
+        this.startTime = null;
+        this.duration = Duration.ofMinutes(0);
+    }
+
+    public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, Instant endTime) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskID = taskID;
+        this.status = taskStatus;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(Duration.between(startTime, endTime).toMinutes());
     }
 
     public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription) {
@@ -27,15 +37,14 @@ public class Task {
         this.taskDescription = taskDescription;
         this.taskID = taskID;
         this.status = taskStatus;
+        this.startTime = null;
+        this.duration = Duration.ofMinutes(0);
     }
 
     public void setStatus(TaskStatus status) {
         if (status == TaskStatus.NEW || status == TaskStatus.IN_PROGRESS || status == TaskStatus.DONE) {
             this.status = status;
-            return;
         }
-
-        System.out.println("Некорректный статус");
     }
 
     public int getTaskID(){
@@ -51,8 +60,33 @@ public class Task {
             return TaskType.TASK;
         }
     }
+
     public void setTaskID(int taskID){
         this.taskID = taskID;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = Duration.ofMinutes(duration.toMinutes());
+    }
+
+    public Instant getEndTime(){
+        if (startTime == null){
+            return null;
+        }
+
+        return startTime.plusSeconds(duration.toSeconds());
     }
 
     @Override
@@ -61,13 +95,26 @@ public class Task {
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
         Task task = (Task) o;
+        boolean nullStartTimeTrue = this.startTime == null && task.startTime == null;
+        boolean nullDurationTrue = this.duration == null && task.duration == null;
         return this.taskName.equals(task.taskName) && this.taskDescription.equals(task.taskDescription) &&
-                this.taskID == task.getTaskID() && this.status == task.status;
+                this.taskID == task.getTaskID() && this.status == task.status &&
+                (nullStartTimeTrue || this.startTime.equals(task.startTime)) &&
+                (nullDurationTrue || this.duration.equals(task.duration));
     }
 
     @Override
     public String toString() {
-        return taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String output = taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
+        if (startTime != null){
+            output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
+        }
+
+        if (duration != Duration.ofMinutes(0)){
+            output += "," + LocalDateTime.ofInstant(getEndTime(), ZoneOffset.UTC).format(formatter);
+        }
+        return output;
     }
 
     public TaskStatus getStatus(){

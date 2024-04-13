@@ -3,6 +3,11 @@ package tasks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,12 +18,13 @@ class EpicTest {
     private static HashMap<Integer, Subtask> subtaskHashMap;
 
     private static Epic create(){
+
         return new Epic(1, "Epic", "Testing epic");
     }
 
     private static void  fillSubtaskHashMap(){
-        Subtask subtask1 = new Subtask(2, "Subtask1", TaskStatus.NEW, "Testing Subtask1", 1);
-        Subtask subtask2 = new Subtask(3, "Subtask2", TaskStatus.NEW, "Testing Subtask2", 1);
+        Subtask subtask1 = new Subtask(2, "Subtask1", TaskStatus.NEW, "Testing Subtask1",1);
+        Subtask subtask2 = new Subtask(3, "Subtask1", TaskStatus.NEW, "Testing Subtask1",1);
         Subtask subtask3 = new Subtask(4, "Subtask3", TaskStatus.NEW, "Testing Subtask3", 1);
 
         subtaskHashMap= new HashMap<>();
@@ -32,6 +38,7 @@ class EpicTest {
             testEpic.setSubtaskIDList(subtaskID);
         }
     }
+
     @BeforeEach
     public void beforeEach(){
         testEpic = EpicTest.create();
@@ -41,6 +48,19 @@ class EpicTest {
     @Test
     public void shouldReturnNewWithEmptySubtaskList(){
         assertNotNull(testEpic.getStatus(), "The task status is not returned");
+        assertEquals(testEpic.getStatus(), TaskStatus.NEW, "The returned task status is incorrect.");
+    }
+
+    @Test
+    public void shouldReturnNewAfterClearSubtaskList(){
+        setArrayList();
+        assertArrayEquals(testEpic.getSubtaskIDList().toArray(), subtaskHashMap.keySet().toArray(),
+                "The returned epicIDList is incorrect.");
+
+        testEpic.deleteAllSubtaskID();
+        testEpic.checkEpicStatus(subtaskHashMap);
+        assertNotNull(testEpic.getStatus(), "The task status is not returned");
+        assertTrue(testEpic.getSubtaskIDList().isEmpty(), "The subtaskList is not empty");
         assertEquals(testEpic.getStatus(), TaskStatus.NEW, "The returned task status is incorrect.");
     }
 
@@ -139,7 +159,20 @@ class EpicTest {
     }
 
     @Test
-    public void shouldReturnSubtaskTypeForSubtask(){
+    public void shouldReturnSubtaskTypeForEpic(){
         assertEquals(testEpic.getTaskType(), TaskType.EPIC);
+    }
+
+    @Test
+    public void setAndGetEndTime(){
+        assertNull(testEpic.getEndTime(), "Epic endTime isn't null");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse("1997.08.07 12:00", formatter);
+
+        testEpic.setEndTime(localDateTime.toInstant(ZoneOffset.UTC));
+
+        assertNotNull(testEpic.getEndTime(), "Epic endTime is null");
+        assertEquals(testEpic.getEndTime(), Instant.parse("1997-08-07T12:00:00.0Z"), "Epic endTime isn't correct");
     }
 }

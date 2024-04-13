@@ -1,80 +1,139 @@
 package manager.taskmanager;
 
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerValidateException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
+
     private final File file = new File("resourcesTest\\taskManager.txt");
+
     @BeforeEach
     public void beforeEach(){
         taskManagerTest = new FileBackedTasksManager(file);
     }
 
+    @AfterEach
+    public void afterEach(){
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     @Test
-    void loadFromFile() {
+    void loadFromFileStandardBehavior() throws ManagerSaveException, ManagerValidateException {
+        fillManager(taskManagerTest);
+        fillHistoryManager(taskManagerTest);
+
+        FileBackedTasksManager tasksManagerLoad = FileBackedTasksManager.loadFromFile(file);
+        assertNotNull(tasksManagerLoad, "tasksManager didn't load");
+        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
-    public void addTask() throws ManagerSaveException {
-        super.addTask();
+    void loadFromFileWithEmptyHistory() throws ManagerSaveException, ManagerValidateException {
+        fillManager(taskManagerTest);
 
+        FileBackedTasksManager tasksManagerLoad = FileBackedTasksManager.loadFromFile(file);
+        assertNotNull(tasksManagerLoad, "tasksManager didn't load");
+        assertTrue(tasksManagerLoad.getHistory().isEmpty(), "The history isn't empty");
+        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
-    public void addSubtask() throws ManagerSaveException {
-        super.addSubtask();
+    void loadFromFileWithEmptyTasksList() throws ManagerSaveException {
+        ((FileBackedTasksManager) taskManagerTest).save();
+        FileBackedTasksManager tasksManagerLoad = FileBackedTasksManager.loadFromFile(file);
+        assertNotNull(tasksManagerLoad, "tasksManager didn't load");
+        assertTrue(tasksManagerLoad.getHistory().isEmpty(), "The history isn't empty");
+
+        assertTrue(tasksManagerLoad.getAllTasks().isEmpty(), "The taskList isn't empty");
+        assertTrue(tasksManagerLoad.getAllEpics().isEmpty(), "The epicList isn't empty");
+        assertTrue(tasksManagerLoad.getAllSubtasks().isEmpty(), "The subtaskList isn't empty");
+
+        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
-    public void addEpic() {
+    public void taskObjectToString() throws ManagerSaveException, ManagerValidateException {
+        FileBackedTasksManagerTest.fillManager(taskManagerTest);
+
+        Task savedTask = taskManagerTest.getTask(1);
+        assertNotNull(savedTask, "Task not found");
+
+        Epic savedEpic = (Epic) taskManagerTest.getTask(3);
+        assertNotNull(savedEpic, "Epic not found");
+
+        Subtask savedSubtask = (Subtask) taskManagerTest.getTask(5);
+        assertNotNull(savedSubtask, "Subtask not found");
     }
 
     @Test
-    public void updateTask() {
+    public void testEquals() throws ManagerSaveException, ManagerValidateException {
+        FileBackedTasksManagerTest.fillManager(taskManagerTest);
+
+        TaskManager taskManagerCopy = new FileBackedTasksManager(file);
+        FileBackedTasksManagerTest.fillManager(taskManagerCopy);
+        assertEquals(taskManagerTest, taskManagerCopy, "taskManagers are not the same");
     }
 
     @Test
-    public void updateSubtask() {
+    public void shouldThrowExceptionForLoadFromFile() throws ManagerSaveException, ManagerValidateException {
+        ManagerSaveException ex = Assertions.assertThrows(
+                ManagerSaveException.class,
+                generateSaveExecutable(new File("resourcesTest\\taskManager_2.txt"))
+        );
+
+        Assertions.assertEquals("resourcesTest\\taskManager_2.txt (Не удается найти указанный файл)", ex.getMessage());
     }
 
     @Test
-    public void updateEpic() {
+    public void testToString() throws ManagerSaveException, ManagerValidateException {
+        FileBackedTasksManagerTest.fillManager(taskManagerTest);
+        FileBackedTasksManagerTest.fillHistoryManager(taskManagerTest);
+
+        String managerRetunredString = taskManagerTest.toString();
+        assertNotNull(managerRetunredString, "Manager don't return string");
+
+        String correctString = "Path: resourcesTest\\taskManager.txt\n" +
+                "1,TASK,task1Test,NEW,Test task1Test description,2015.05.22 12:00,2015.05.22 12:15\n" +
+                "2,TASK,task2Test,NEW,Test task2Test description\n" +
+                "3,EPIC,epic1Test,NEW,Test epic1Test description,2015.05.23 13:00,2015.05.23 16:30\n" +
+                "4,EPIC,epic2Test,NEW,Test epic2Test description\n" +
+                "5,SUBTASK,subtask1Test,NEW,Test subtask1Test description,2015.05.23 15:00,2015.05.23 15:15,3\n" +
+                "6,SUBTASK,subtask2Test,NEW,Test subtask2Test description,3\n" +
+                "7,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 16:00,2015.05.23 16:30,3\n" +
+                "8,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 13:00,2015.05.23 13:30,3\n" +
+                "\n" +
+                "History: 3,4,2,1,7,6,5";
+
+        assertEquals(managerRetunredString, correctString, "Returned string isn't correct");
+    }
+    private static void fillHistoryManager(TaskManager manager) throws ManagerSaveException {
+        manager.getEpicObjectByID(3);
+        manager.getEpicObjectByID(4);
+        manager.getTaskObjectByID(2);
+        manager.getTaskObjectByID(1);
+        manager.getSubtaskObjectByID(7);
+        manager.getSubtaskObjectByID(6);
+        manager.getSubtaskObjectByID(5);
     }
 
-    @Test
-    public void deleteTaskById() {
-    }
-
-    @Test
-    public void deleteSubtaskById() {
-    }
-
-    @Test
-    public void deleteEpicById() {
-    }
-
-    @Test
-    public void getEpicObjectByID() {
-    }
-
-    @Test
-    public void getTaskObjectByID() {
-    }
-
-    @Test
-    public void getSubtaskObjectByID() {
-    }
-
-    @Test
-    public void testEquals() {
-    }
-
-    @Test
-    public void testToString() {
+    private Executable generateSaveExecutable(File file) {
+        return () -> FileBackedTasksManager.loadFromFile(file);
     }
 }

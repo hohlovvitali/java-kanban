@@ -1,5 +1,6 @@
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerValidateException;
 import manager.taskmanager.InMemoryTaskManager;
 import tasks.*;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws ManagerSaveException {
+    public static void main(String[] args) throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         // Проверяем создание классов task.Task
         Task task1 = new Task("Подняться", "Первое задание");
@@ -16,8 +17,8 @@ public class Main {
         manager.addTask(task2);
 
         // Проверяем создание классов task.Epic
-        Epic epic1 = new Epic("Важный завтрак");
-        Epic epic2 = new Epic("Важная тренировка");
+        Epic epic1 = new Epic(0, "Важный завтрак", "Меню");
+        Epic epic2 = new Epic(0, "Важная тренировка", "Силовая");
         manager.addEpic(epic1);
         manager.addEpic(epic2);
 
@@ -55,13 +56,13 @@ public class Main {
                     System.out.println("----------------------------------------------------------------");
                     break;
                 case 4:
-                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString(manager));
+                    System.out.println(manager.getEpicObjectByID(epic1.getTaskID()).toString());
                     System.out.println(manager.getHistory());
                     System.out.println("----------------------------------------------------------------");
                     showHistoryID((ArrayList<Task>) manager.getHistory());
                     break;
                 case 5:
-                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString(manager));
+                    System.out.println(manager.getEpicObjectByID(epic2.getTaskID()).toString());
                     System.out.println(manager.getHistory());
                     System.out.println("----------------------------------------------------------------");
                     showHistoryID((ArrayList<Task>) manager.getHistory());

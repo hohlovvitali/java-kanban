@@ -3,13 +3,22 @@ package tasks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
     private static Subtask testSubtask;
 
     private static Subtask create(){
-        return new Subtask(1, "Subtask", TaskStatus.NEW, "Testing Subtask", 0);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse("1997.08.07 12:00", formatter);
+
+        return new Subtask(1, "Subtask", TaskStatus.NEW, "Testing Subtask",
+                localDateTime.toInstant(ZoneOffset.UTC),
+                localDateTime.plusMinutes(15).toInstant(ZoneOffset.UTC), 0);
     }
 
     @BeforeEach
@@ -43,7 +52,7 @@ class SubtaskTest {
 
     @Test
     public void shouldReturnCorrectString(){
-        assertEquals("1,SUBTASK,Subtask,NEW,Testing Subtask,0", testSubtask.toString());
+        assertEquals("1,SUBTASK,Subtask,NEW,Testing Subtask,1997.08.07 12:00,1997.08.07 12:15,0", testSubtask.toString());
     }
 
     @Test

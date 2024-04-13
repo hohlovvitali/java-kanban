@@ -2,33 +2,42 @@ package tasks;
 
 import manager.taskmanager.InMemoryTaskManager;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtaskIDList;
-
-    public Epic(String taskName) {
-        this.taskName = taskName;
-        this.subtaskIDList = new ArrayList<>();
-        this.status = TaskStatus.NEW;
-        this.taskID = 0;
-    }
+    private final ArrayList<Integer> subtaskIDList;
+    private Instant endTime;
 
     public Epic(int taskID, String taskName, String taskDescription) {
         super(taskID, taskName, TaskStatus.NEW, taskDescription);
         this.subtaskIDList = new ArrayList<>();
     }
 
-    public Epic(Epic epic) {
-        this.taskName = epic.taskName;
-        this.status = epic.status;
-        this.taskID = epic.taskID;
-    }
-
     public Epic(int taskID, String taskName, TaskStatus taskStatus, String taskDescription) {
         super(taskID, taskName, taskStatus, taskDescription);
+        this.endTime = null;
         this.subtaskIDList = new ArrayList<>();
+    }
+
+    public Epic(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, Instant endTime) {
+        super(taskID, taskName, taskStatus, taskDescription, startTime, endTime);
+        this.endTime = endTime;
+        this.subtaskIDList = new ArrayList<>();
+    }
+
+    @Override
+    public Instant getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Instant endTime) {
+        this.endTime = endTime;
     }
 
     public ArrayList<Integer> getSubtaskIDList() {
@@ -71,21 +80,16 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return super.toString();
-    }
-
-    public String toString(InMemoryTaskManager manager) {
-        String outString = "task.Epic{" +
-                " taskName='" + taskName + '\'' +
-                ", taskID=" + taskID +
-                ", status='" + status + '\'' + '\n';
-        for (Integer subtaskID: subtaskIDList){
-            outString = outString + manager.getSubtaskObjectByIDNotMemory(subtaskID).toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String output = taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
+        if (startTime != null){
+            output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-        outString += "}\n";
-
-        return outString;
+        if (endTime != null){
+            output += "," + LocalDateTime.ofInstant(endTime, ZoneOffset.UTC).format(formatter);
+        }
+        return output;
     }
 
     @Override
@@ -94,7 +98,13 @@ public class Epic extends Task {
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
         Epic task = (Epic) o;
-        return this.taskName.equals(task.taskName) && this.taskID == task.getTaskID() && this.status == task.status &&
-                this.subtaskIDList.equals(task.getSubtaskIDList());
+        boolean nullStartTimeTrue = this.startTime == null && task.startTime == null;
+        boolean nullDurationTrue = this.duration == null && task.duration == null;
+        boolean nullEndTimeTrue = this.endTime == null && task.endTime == null;
+        return this.taskName.equals(task.taskName) && this.taskDescription.equals(task.taskDescription) &&
+                this.taskID == task.getTaskID() && this.status == task.status &&
+                (nullStartTimeTrue || this.startTime.equals(task.startTime)) &&
+                (nullDurationTrue || this.duration.equals(task.duration)) && this.subtaskIDList.equals(task.getSubtaskIDList()) &&
+                (nullEndTimeTrue || this.endTime.equals(task.endTime));
     }
 }

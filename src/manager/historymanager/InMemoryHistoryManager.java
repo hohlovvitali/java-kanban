@@ -17,7 +17,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void add(Task task){
         remove(task.getTaskID());
-        Node<Task> newNode = linklast(task);
+        Node<Task> newNode = linkLast(task);
         if (head == null){
             head = newNode;
         }
@@ -52,7 +52,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasksList;
     }
 
-    private Node<Task> linklast(Task task){
+    private Node<Task> linkLast(Task task){
         Node<Task> newTail = new Node<>(task, this.tail);
         if(this.tail != null){
             this.tail.setNext(newTail);
@@ -61,23 +61,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         return newTail;
     }
 
-    private Node<Task> getHead() {
-        return head;
-    }
-
-    private Node<Task> getTail() {
-        return tail;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (this.getClass() != o.getClass()) return false;
-        InMemoryHistoryManager taskManager = (InMemoryHistoryManager) o;
-        return this.taskHistory.equals(taskManager.taskHistory) && this.tail.equals(taskManager.tail) &&
-                this.head.equals(taskManager.head);
-    }
     public static class Node<E> {
         private E data;
         private Node<E> prev;
@@ -91,10 +74,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         public E getData() {
             return data;
-        }
-
-        public void setData(E task) {
-            this.data = task;
         }
 
         public Node<E> getPrev() {
@@ -125,15 +104,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else if (task.getPrev() != null){
                 task.getPrev().setNext(null);
             }
-        }
-
-        @Override
-        public boolean equals(Object o){
-            if (this == o) return true;
-            if (o == null) return false;
-            if (this.getClass() != o.getClass()) return false;
-            Node<E> node = (Node<E>) o;
-            return this.data.equals(node.data) && this.next.equals(node.next) && this.prev.equals(node.prev);
         }
     }
 }

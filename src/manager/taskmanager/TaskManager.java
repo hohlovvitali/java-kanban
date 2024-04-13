@@ -1,6 +1,7 @@
 package manager.taskmanager;
 
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerValidateException;
 import tasks.*;
 
 import java.util.ArrayList;
@@ -8,15 +9,15 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void addTask(Task task) throws ManagerSaveException;
+    void addTask(Task task) throws ManagerSaveException, ManagerValidateException;
 
-    void addSubtask(Subtask subtask) throws ManagerSaveException;
+    void addSubtask(Subtask subtask) throws ManagerSaveException, ManagerValidateException;
 
     void addEpic(Epic epic) throws ManagerSaveException;
 
-    void updateTask(Task task) throws ManagerSaveException;
+    void updateTask(Task task) throws ManagerSaveException, ManagerValidateException;
 
-    void updateSubtask(Subtask subtask) throws ManagerSaveException;
+    void updateSubtask(Subtask subtask) throws ManagerSaveException, ManagerValidateException;
 
     void updateEpic(Epic epic) throws ManagerSaveException;
 
