@@ -1,8 +1,8 @@
-package manager.taskmanager;
+package tests.managertests;
 
 import manager.managerexception.ManagerSaveException;
 import manager.managerexception.ManagerValidateException;
-import org.junit.jupiter.api.BeforeEach;
+import manager.taskmanager.TaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -105,8 +105,6 @@ abstract class TaskManagerTest <T extends TaskManager>{
 
     @Test
     void addSubtask() throws ManagerSaveException, ManagerValidateException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-
         Epic epic = new Epic(0,"Test addNewEpic", "Test addNewEpic description");
         taskManagerTest.addEpic(epic);
 

@@ -1,6 +1,6 @@
-package manager.historymanager;
+package tests.managertests;
 
-import manager.taskmanager.FileBackedTasksManager;
+import manager.historymanager.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Task;

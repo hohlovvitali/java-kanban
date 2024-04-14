@@ -1,7 +1,11 @@
-package tasks;
+package tests.taskstests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Subtask;
+import tasks.TaskStatus;
+import tasks.TaskType;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -57,6 +61,6 @@ class SubtaskTest {
 
     @Test
     public void shouldReturnSubtaskTypeForSubtask(){
-        assertEquals(testSubtask.getTaskType(), TaskType.SUBTASK);
+        Assertions.assertEquals(testSubtask.getTaskType(), TaskType.SUBTASK);
     }
 }

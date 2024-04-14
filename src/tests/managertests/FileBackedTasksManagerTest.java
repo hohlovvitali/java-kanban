@@ -1,7 +1,9 @@
-package manager.taskmanager;
+package tests.managertests;
 
 import manager.managerexception.ManagerSaveException;
 import manager.managerexception.ManagerValidateException;
+import manager.taskmanager.FileBackedTasksManager;
+import manager.taskmanager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +43,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
 
         FileBackedTasksManager tasksManagerLoad = FileBackedTasksManager.loadFromFile(file);
         assertNotNull(tasksManagerLoad, "tasksManager didn't load");
-        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
+        Assertions.assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
@@ -51,7 +53,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
         FileBackedTasksManager tasksManagerLoad = FileBackedTasksManager.loadFromFile(file);
         assertNotNull(tasksManagerLoad, "tasksManager didn't load");
         assertTrue(tasksManagerLoad.getHistory().isEmpty(), "The history isn't empty");
-        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
+        Assertions.assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
@@ -65,7 +67,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
         assertTrue(tasksManagerLoad.getAllEpics().isEmpty(), "The epicList isn't empty");
         assertTrue(tasksManagerLoad.getAllSubtasks().isEmpty(), "The subtaskList isn't empty");
 
-        assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
+        Assertions.assertEquals(taskManagerTest, tasksManagerLoad, "The tasksManagers aren't the same");
     }
 
     @Test
@@ -88,11 +90,11 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
 
         TaskManager taskManagerCopy = new FileBackedTasksManager(file);
         FileBackedTasksManagerTest.fillManager(taskManagerCopy);
-        assertEquals(taskManagerTest, taskManagerCopy, "taskManagers are not the same");
+        Assertions.assertEquals(taskManagerTest, taskManagerCopy, "taskManagers are not the same");
     }
 
     @Test
-    public void shouldThrowExceptionForLoadFromFile() throws ManagerSaveException, ManagerValidateException {
+    public void shouldThrowExceptionForLoadFromFile() {
         ManagerSaveException ex = Assertions.assertThrows(
                 ManagerSaveException.class,
                 generateSaveExecutable(new File("resources\\taskManager_2.txt"))

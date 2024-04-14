@@ -1,19 +1,17 @@
-package manager.taskmanager;
+package tests.managertests;
 
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
 import manager.managerexception.ManagerValidateException;
+import manager.taskmanager.InMemoryTaskManager;
+import manager.taskmanager.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
-import tasks.TaskStatus;
 
-import java.io.File;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;

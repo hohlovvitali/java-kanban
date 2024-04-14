@@ -1,7 +1,11 @@
-package tasks;
+package tests.taskstests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Task;
+import tasks.TaskStatus;
+import tasks.TaskType;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -115,7 +119,7 @@ class TaskTest {
 
     @Test
     public void shouldReturnTaskTypeForTask(){
-        assertEquals(testTask.getTaskType(), TaskType.TASK);
+        Assertions.assertEquals(testTask.getTaskType(), TaskType.TASK);
     }
 
     @Test

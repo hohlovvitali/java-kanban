@@ -1,9 +1,10 @@
-package tasks;
+package tests.taskstests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.*;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -160,7 +161,7 @@ class EpicTest {
 
     @Test
     public void shouldReturnSubtaskTypeForEpic(){
-        assertEquals(testEpic.getTaskType(), TaskType.EPIC);
+        Assertions.assertEquals(testEpic.getTaskType(), TaskType.EPIC);
     }
 
     @Test
