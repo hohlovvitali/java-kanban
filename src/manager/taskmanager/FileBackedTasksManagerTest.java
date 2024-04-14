@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
 
-    private final File file = new File("resourcesTest\\taskManager.txt");
+    private final File file = new File("resources\\taskManagerTest.txt");
 
     @BeforeEach
     public void beforeEach(){
@@ -95,10 +95,10 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
     public void shouldThrowExceptionForLoadFromFile() throws ManagerSaveException, ManagerValidateException {
         ManagerSaveException ex = Assertions.assertThrows(
                 ManagerSaveException.class,
-                generateSaveExecutable(new File("resourcesTest\\taskManager_2.txt"))
+                generateSaveExecutable(new File("resources\\taskManager_2.txt"))
         );
 
-        Assertions.assertEquals("resourcesTest\\taskManager_2.txt (Не удается найти указанный файл)", ex.getMessage());
+        Assertions.assertEquals("resources\\taskManager_2.txt (Не удается найти указанный файл)", ex.getMessage());
     }
 
     @Test
@@ -109,7 +109,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
         String managerRetunredString = taskManagerTest.toString();
         assertNotNull(managerRetunredString, "Manager don't return string");
 
-        String correctString = "Path: resourcesTest\\taskManager.txt\n" +
+        String correctString = "Path: resources\\taskManagerTest.txt\n" +
                 "1,TASK,task1Test,NEW,Test task1Test description,2015.05.22 12:00,2015.05.22 12:15\n" +
                 "2,TASK,task2Test,NEW,Test task2Test description\n" +
                 "3,EPIC,epic1Test,NEW,Test epic1Test description,2015.05.23 13:00,2015.05.23 16:30\n" +
