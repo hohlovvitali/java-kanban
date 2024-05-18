@@ -3,6 +3,7 @@ package manager.taskmanager;
 import manager.historymanager.HistoryManager;
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import tasks.*;
 
@@ -37,6 +38,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasksIDList = new ArrayList<>();
     }
 
+    @Override
     public List<Task> getPrioritizedTasks(){
         return new ArrayList<>(prioritizedTasks);
     }
@@ -54,16 +56,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addTask(Task task) throws ManagerSaveException, ManagerValidateException {
+        validateTask(task);
         idCreator++;
         task.setTaskID(idCreator);
         taskHashMap.put(idCreator, task);
         prioritizedTasks.add(task);
         tasksIDList.add(idCreator);
-        validateTask(task);
     }
 
     @Override
     public void addSubtask(Subtask subtask) throws ManagerSaveException, ManagerValidateException {
+        validateTask(subtask);
         idCreator++;
         subtask.setTaskID(idCreator);
         subtaskHashMap.put(idCreator, subtask);
@@ -72,7 +75,6 @@ public class InMemoryTaskManager implements TaskManager {
         epicHashMap.get(subtask.getEpicID()).checkEpicStatus(subtaskHashMap);
         tasksIDList.add(idCreator);
         this.updateTime(epicHashMap.get(subtask.getEpicID()));
-        validateTask(subtask);
     }
 
     @Override
@@ -85,15 +87,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) throws ManagerSaveException, ManagerValidateException {
-        taskHashMap.put(task.getTaskID(), task);
         validateTask(task);
+        taskHashMap.put(task.getTaskID(), task);
     }
 
     @Override
     public void updateSubtask(Subtask subtask) throws ManagerSaveException, ManagerValidateException {
+        validateTask(subtask);
         subtaskHashMap.put(subtask.getTaskID(), subtask);
         epicHashMap.get(subtask.getEpicID()).checkEpicStatus(subtaskHashMap);
-        validateTask(subtask);
+        this.updateTime(epicHashMap.get(subtask.getEpicID()));
     }
 
     @Override
@@ -102,26 +105,33 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException {
+    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException, ManagerTaskNotFoundException {
         if (epicHashMap.containsKey(epicID)){
             taskMemory.add(epicHashMap.get(epicID));
+        } else {
+            throw new ManagerTaskNotFoundException("Epic not found");
         }
+
         return epicHashMap.get(epicID);
     }
 
     @Override
-    public Task getTaskObjectByID(int taskID) throws ManagerSaveException {
+    public Task getTaskObjectByID(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         if (taskHashMap.containsKey(taskID)){
             taskMemory.add(taskHashMap.get(taskID));
+        } else {
+            throw new ManagerTaskNotFoundException("Task not found");
         }
 
         return taskHashMap.get(taskID);
     }
 
     @Override
-    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException {
+    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         if (subtaskHashMap.containsKey(subtaskID)){
             taskMemory.add(subtaskHashMap.get(subtaskID));
+        } else {
+            throw new ManagerTaskNotFoundException("Subtask not found");
         }
 
         return subtaskHashMap.get(subtaskID);
@@ -151,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllEpics() throws ManagerSaveException {
+    public void deleteAllEpics() throws ManagerSaveException, ManagerTaskNotFoundException {
         this.deleteAllSubtasks();
 
         ArrayList<Epic> epicArrayList = this.getAllEpics();
@@ -163,7 +173,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskById(int taskID) throws ManagerSaveException {
+    public void deleteTaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
+        if (!taskHashMap.containsKey(taskID)){
+            throw new ManagerTaskNotFoundException("Task not Found");
+        }
+
         taskMemory.remove(taskID);
         taskHashMap.remove(taskID);
         tasksIDList.remove(Integer.valueOf(taskID));
@@ -171,23 +185,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteSubtaskById(int taskID) throws ManagerSaveException {
+    public void deleteSubtaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
+        if (!subtaskHashMap.containsKey(taskID)){
+            throw new ManagerTaskNotFoundException("Subtask not Found");
+        }
+
         taskMemory.remove(taskID);
         epicHashMap.get(subtaskHashMap.get(taskID).getEpicID()).deleteSubtaskID(taskID);
         epicHashMap.get(subtaskHashMap.get(taskID).getEpicID()).checkEpicStatus(subtaskHashMap);
+        this.updateTime(epicHashMap.get(subtaskHashMap.get(taskID).getEpicID()));
         subtaskHashMap.remove(taskID);
         tasksIDList.remove(Integer.valueOf(taskID));
         removeTaskFromPrioritizedTasks(taskID);
     }
 
     @Override
-    public void deleteEpicById(int taskID) throws ManagerSaveException {
+    public void deleteEpicById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         if (!epicHashMap.containsKey(taskID)){
-            return;
+            throw new ManagerTaskNotFoundException("Epic not Found");
         }
-        ArrayList<Integer> subtaskIDList = new ArrayList<>(epicHashMap.get(taskID).getSubtaskIDList());
-        for (Integer subtaskID: subtaskIDList){
-            this.deleteSubtaskById(subtaskID);
+
+        if (epicHashMap.get(taskID).getSubtaskIDList() != null){
+            ArrayList<Integer> subtaskIDList = new ArrayList<>(epicHashMap.get(taskID).getSubtaskIDList());
+            for (Integer subtaskID: subtaskIDList){
+                this.deleteSubtaskById(subtaskID);
+            }
         }
 
         taskMemory.remove(taskID);
@@ -197,16 +219,28 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getAllTasks(){
+        for (Task task: taskHashMap.values()){
+            taskMemory.add(task);
+        }
+
         return new ArrayList<>(taskHashMap.values());
     }
 
     @Override
     public ArrayList<Subtask> getAllSubtasks(){
+        for (Subtask subtask: subtaskHashMap.values()){
+            taskMemory.add(subtask);
+        }
+
         return new ArrayList<>(subtaskHashMap.values());
     }
 
     @Override
     public ArrayList<Epic> getAllEpics(){
+        for (Epic epic: epicHashMap.values()){
+            taskMemory.add(epic);
+        }
+
         return new ArrayList<>(epicHashMap.values());
     }
 
@@ -233,19 +267,33 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void updateTime(Epic epic) throws ManagerSaveException {
         ArrayList<Integer> subtasksID = epic.getSubtaskIDList();
+
+        if (subtasksID.isEmpty()){
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            epic.setDuration(Duration.ofMinutes(0));
+            this.updateEpic(epic);
+            return;
+        }
+
         Instant minStartTime = subtaskHashMap.get(subtasksID.get(0)).getStartTime();
         Instant maxEndTime = subtaskHashMap.get((subtasksID.get(0))).getEndTime();
 
         for (int i = 1; i < subtasksID.size(); i++){
             Subtask subtask = subtaskHashMap.get((subtasksID.get(i)));
 
-            if (subtask.getStartTime() != null){
-                if (subtask.getStartTime().isBefore(minStartTime)){
-                    minStartTime = subtask.getStartTime();
-                }
+            if (minStartTime == null){
+                minStartTime = subtask.getStartTime();
+                maxEndTime = subtask.getEndTime();
+            } else {
+                if (subtask.getStartTime() != null){
+                    if (subtask.getStartTime().isBefore(minStartTime)){
+                        minStartTime = subtask.getStartTime();
+                    }
 
-                if (subtask.getEndTime().isAfter(maxEndTime)){
-                    maxEndTime = subtask.getEndTime();
+                    if (subtask.getEndTime().isAfter(maxEndTime)){
+                        maxEndTime = subtask.getEndTime();
+                    }
                 }
             }
         }
@@ -264,7 +312,7 @@ public class InMemoryTaskManager implements TaskManager {
         List<Task> tasksPriority = getPrioritizedTasks();
 
         for (Task task: tasksPriority){
-            if (!taskCheck.equals(task) && taskCheck.getStartTime() != null && task.getStartTime() != null){
+            if (taskCheck.getTaskID() != task.getTaskID() && taskCheck.getStartTime() != null && task.getStartTime() != null){
                 if (taskCheck.getStartTime().isBefore(task.getEndTime()) && taskCheck.getStartTime().isAfter(task.getStartTime())
                         || taskCheck.getEndTime().isBefore(task.getEndTime()) && taskCheck.getEndTime().isAfter(task.getStartTime())){
                     throw new ManagerValidateException("Task " + taskCheck.getTaskID() + " and task " +
