@@ -1,5 +1,6 @@
 package tasks;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> subtaskIDList;
+    private ArrayList<Integer> subtaskIDList;
     private Instant endTime;
 
     public Epic(int taskID, String taskName, String taskDescription) {
@@ -28,6 +29,13 @@ public class Epic extends Task {
         this.subtaskIDList = new ArrayList<>();
     }
 
+    public Epic(String taskName, TaskStatus taskStatus, String taskDescription) {
+        super();
+        this.taskName = taskName;
+        this.status = taskStatus;
+        this.taskDescription = taskDescription;
+    }
+
     @Override
     public Instant getEndTime() {
         return endTime;
@@ -42,6 +50,10 @@ public class Epic extends Task {
     }
 
     public void setSubtaskIDList(Integer subtaskID) {
+        if (this.subtaskIDList == null){
+            this.subtaskIDList = new ArrayList<>();
+        }
+
         this.subtaskIDList.add(subtaskID);
     }
 

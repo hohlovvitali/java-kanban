@@ -1,5 +1,6 @@
 package tasks;
 
+import java.time.Duration;
 import java.time.Instant;
 
 public class Subtask extends Task {
@@ -18,6 +19,16 @@ public class Subtask extends Task {
 
     public Subtask(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, int epicID) {
         super(taskID, taskName, taskStatus, taskDescription);
+        this.epicID = epicID;
+    }
+
+    public Subtask(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, String duration, int epicID) {
+        super(taskID,taskName,taskStatus,taskDescription,startTime,duration);
+        this.epicID = epicID;
+    }
+
+    public Subtask(String taskName, TaskStatus taskStatus, String taskDescription, Instant instant, Duration duration, int epicID) {
+        super(taskName, taskStatus, taskDescription, instant, duration);
         this.epicID = epicID;
     }
 
