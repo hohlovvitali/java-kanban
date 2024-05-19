@@ -114,7 +114,7 @@ class TaskTest {
 
     @Test
     public void shouldReturnCorrectString(){
-        assertEquals("1,TASK,Task,NEW,Testing task,1997.08.07 12:00,1997.08.07 12:15", testTask.toString());
+        assertEquals("1,TASK,Task,NEW,Testing task,1997.08.07 12:00,PT15M", testTask.toString());
     }
 
     @Test

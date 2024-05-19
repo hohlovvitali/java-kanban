@@ -56,7 +56,7 @@ class SubtaskTest {
 
     @Test
     public void shouldReturnCorrectString(){
-        assertEquals("1,SUBTASK,Subtask,NEW,Testing Subtask,1997.08.07 12:00,1997.08.07 12:15,0", testSubtask.toString());
+        assertEquals("1,SUBTASK,Subtask,NEW,Testing Subtask,1997.08.07 12:00,PT15M,0", testSubtask.toString());
     }
 
     @Test

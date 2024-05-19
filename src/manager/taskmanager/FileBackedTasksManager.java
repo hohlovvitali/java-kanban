@@ -1,6 +1,7 @@
 package manager.taskmanager;
 import manager.historymanager.HistoryManager;
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import tasks.*;
 
@@ -109,39 +110,39 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     @Override
-    public void deleteTaskById(int taskID) throws ManagerSaveException {
+    public void deleteTaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteTaskById(taskID);
         save();
     }
 
     @Override
-    public void deleteSubtaskById(int taskID) throws ManagerSaveException {
+    public void deleteSubtaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteSubtaskById(taskID);
         save();
     }
 
     @Override
-    public void deleteEpicById(int taskID) throws ManagerSaveException {
+    public void deleteEpicById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteEpicById(taskID);
         save();
     }
 
     @Override
-    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException {
+    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Epic epic = super.getEpicObjectByID(epicID);
         save();
         return epic;
     }
 
     @Override
-    public Task getTaskObjectByID(int taskID) throws ManagerSaveException {
+    public Task getTaskObjectByID(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Task task = super.getTaskObjectByID(taskID);
         save();
         return task;
     }
 
     @Override
-    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException {
+    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Subtask subtask = super.getSubtaskObjectByID(subtaskID);
         save();
         return subtask;
@@ -197,14 +198,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         String[] lineValues = value.split(",");
         if(lineValues.length >= 7){
             if (lineValues[1].equals(TaskType.TASK.toString())){
-                return new Task(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
+                return new Task(Integer.parseInt(lineValues[0]), lineValues[2], (TaskStatus.valueOf(lineValues[3])),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
-                        LocalDateTime.parse(lineValues[6], formatter).toInstant(ZoneOffset.UTC));
+                        lineValues[6]);
             } else if (lineValues[1].equals(TaskType.SUBTASK.toString())) {
                 return new Subtask(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
-                        LocalDateTime.parse(lineValues[6], formatter).toInstant(ZoneOffset.UTC),
-                        Integer.parseInt(lineValues[7]));
+                        lineValues[6], Integer.parseInt(lineValues[7]));
             } else {
                 return new Epic(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
