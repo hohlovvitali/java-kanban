@@ -8,7 +8,7 @@ import manager.taskmanager.InMemoryTaskManager;
 import java.io.IOException;
 
 public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
-    public HistoryHandler(InMemoryTaskManager taskManager) throws ManagerSaveException {
+    public HistoryHandler(InMemoryTaskManager taskManager) {
         super(taskManager);
     }
 

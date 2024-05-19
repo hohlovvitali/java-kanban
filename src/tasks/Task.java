@@ -132,9 +132,6 @@ public class Task {
             output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-//        if (duration != Duration.ofMinutes(0) && duration != null){
-//            output += "," + LocalDateTime.ofInstant(getEndTime(), ZoneOffset.UTC).format(formatter);
-//        }
         if (duration != Duration.ofMinutes(0) && duration != null){
             output += "," + duration;
         }
