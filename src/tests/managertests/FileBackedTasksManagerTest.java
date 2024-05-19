@@ -1,7 +1,6 @@
 package tests.managertests;
 
 import manager.managerexception.ManagerSaveException;
-import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import manager.taskmanager.FileBackedTasksManager;
 import manager.taskmanager.TaskManager;
@@ -38,7 +37,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
         }
     }
     @Test
-    void loadFromFileStandardBehavior() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    void loadFromFileStandardBehavior() throws ManagerSaveException, ManagerValidateException {
         fillManager(taskManagerTest);
         fillHistoryManager(taskManagerTest);
 
@@ -105,7 +104,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
     }
 
     @Test
-    public void testToString() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    public void testToString() throws ManagerSaveException, ManagerValidateException {
         FileBackedTasksManagerTest.fillManager(taskManagerTest);
         FileBackedTasksManagerTest.fillHistoryManager(taskManagerTest);
 
@@ -113,20 +112,20 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
         assertNotNull(managerRetunredString, "Manager don't return string");
 
         String correctString = "Path: resources\\taskManagerTest.txt\n" +
-                "1,TASK,task1Test,NEW,Test task1Test description,2015.05.22 12:00,PT15M\n" +
+                "1,TASK,task1Test,NEW,Test task1Test description,2015.05.22 12:00,2015.05.22 12:15\n" +
                 "2,TASK,task2Test,NEW,Test task2Test description\n" +
                 "3,EPIC,epic1Test,NEW,Test epic1Test description,2015.05.23 13:00,2015.05.23 16:30\n" +
                 "4,EPIC,epic2Test,NEW,Test epic2Test description\n" +
-                "5,SUBTASK,subtask1Test,NEW,Test subtask1Test description,2015.05.23 15:00,PT15M,3\n" +
+                "5,SUBTASK,subtask1Test,NEW,Test subtask1Test description,2015.05.23 15:00,2015.05.23 15:15,3\n" +
                 "6,SUBTASK,subtask2Test,NEW,Test subtask2Test description,3\n" +
-                "7,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 16:00,PT30M,3\n" +
-                "8,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 13:00,PT30M,3\n" +
+                "7,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 16:00,2015.05.23 16:30,3\n" +
+                "8,SUBTASK,subtask3Test,NEW,Test subtask3Test description,2015.05.23 13:00,2015.05.23 13:30,3\n" +
                 "\n" +
                 "History: 3,4,2,1,7,6,5";
 
         assertEquals(managerRetunredString, correctString, "Returned string isn't correct");
     }
-    private static void fillHistoryManager(TaskManager manager) throws ManagerSaveException, ManagerTaskNotFoundException {
+    private static void fillHistoryManager(TaskManager manager) throws ManagerSaveException {
         manager.getEpicObjectByID(3);
         manager.getEpicObjectByID(4);
         manager.getTaskObjectByID(2);
