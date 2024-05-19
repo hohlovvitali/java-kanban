@@ -36,7 +36,7 @@ public class HttpTaskManagerTasksTest {
     // передаём его в качестве аргумента в конструктор HttpTaskServer
     HttpTaskServer taskServer = new HttpTaskServer((InMemoryTaskManager) manager);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-    final String urlHost = "http://localhost:8080/";
+    final String urlHost = "http://localhost:8000/";
     Gson gson = HttpTaskServer.getGson();
 
     public HttpTaskManagerTasksTest() throws IOException, IOException, ManagerSaveException {
