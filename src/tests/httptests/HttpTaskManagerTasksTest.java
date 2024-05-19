@@ -39,7 +39,7 @@ public class HttpTaskManagerTasksTest {
     final String urlHost = "http://localhost:8080/";
     Gson gson = HttpTaskServer.getGson();
 
-    public HttpTaskManagerTasksTest() throws IOException, ManagerSaveException {
+    public HttpTaskManagerTasksTest() throws IOException, IOException, ManagerSaveException {
     }
 
     @BeforeEach
@@ -160,7 +160,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void getEpics() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException {
+    public void getEpics() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException, ManagerTaskNotFoundException {
         fillManager(manager);
 
         HttpClient client = HttpClient.newHttpClient();
@@ -186,7 +186,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void getTasks() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException {
+    public void getTasks() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException, ManagerTaskNotFoundException {
         fillManager(manager);
 
         HttpClient client = HttpClient.newHttpClient();
@@ -199,7 +199,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void getSubtasks() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException {
+    public void getSubtasks() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException, ManagerTaskNotFoundException {
         fillManager(manager);
 
         HttpClient client = HttpClient.newHttpClient();
