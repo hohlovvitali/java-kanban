@@ -18,7 +18,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class HttpTaskServer {
-    private static final int PORT = 8000;
+    private static final int PORT = 8080;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
