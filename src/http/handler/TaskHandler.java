@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
-    public TaskHandler(InMemoryTaskManager taskManager) {
+    public TaskHandler(InMemoryTaskManager taskManager) throws ManagerSaveException {
         super(taskManager);
     }
 
@@ -109,7 +109,8 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
         } catch (ManagerTaskNotFoundException e){
             sendNotFound(exchange, "Task с номером " + taskID.get() + " не существует");
         } catch (ManagerValidateException e) {
-            String output = taskID.map(integer -> "Обновленная задача с номером " + integer + " пересекается с уже существующими задачами").orElse("Новая Task пересекатеся с уже существующими задачами");
+            String output = "";
+            output = taskID.map(integer -> "Обновленная задача с номером " + integer + " пересекается с уже существующими задачами").orElse("Новая Task пересекатеся с уже существующими задачами");
             sendHasInteractions(exchange, output);
         }
     }
