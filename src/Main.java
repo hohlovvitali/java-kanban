@@ -1,6 +1,5 @@
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
-import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import manager.taskmanager.InMemoryTaskManager;
 import tasks.*;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    public static void main(String[] args) throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         // Проверяем создание классов task.Task
         Task task1 = new Task("Подняться", "Первое задание");

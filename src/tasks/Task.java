@@ -23,15 +23,6 @@ public class Task {
         this.duration = Duration.ofMinutes(0);
     }
 
-    public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, String duration) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
-        this.taskID = taskID;
-        this.status = taskStatus;
-        this.startTime = startTime;
-        this.duration = Duration.parse(duration);
-    }
-
     public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, Instant endTime) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -48,18 +39,6 @@ public class Task {
         this.status = taskStatus;
         this.startTime = null;
         this.duration = Duration.ofMinutes(0);
-    }
-
-    public Task(String taskName, TaskStatus taskStatus, String taskDescription, Instant instant, Duration duration) {
-        this.taskName = taskName;
-        this.status = taskStatus;
-        this.taskDescription = taskDescription;
-        this.startTime = instant;
-        this.duration = duration;
-    }
-
-    public Task() {
-
     }
 
     public void setStatus(TaskStatus status) {
@@ -132,25 +111,13 @@ public class Task {
             output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-//        if (duration != Duration.ofMinutes(0) && duration != null){
-//            output += "," + LocalDateTime.ofInstant(getEndTime(), ZoneOffset.UTC).format(formatter);
-//        }
-        if (duration != Duration.ofMinutes(0) && duration != null){
-            output += "," + duration;
+        if (duration != Duration.ofMinutes(0)){
+            output += "," + LocalDateTime.ofInstant(getEndTime(), ZoneOffset.UTC).format(formatter);
         }
-
         return output;
     }
 
     public TaskStatus getStatus(){
         return status;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
     }
 }

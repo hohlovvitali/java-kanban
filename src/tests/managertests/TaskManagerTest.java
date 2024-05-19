@@ -1,19 +1,14 @@
 package tests.managertests;
 
 import manager.managerexception.ManagerSaveException;
-import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
-import manager.taskmanager.FileBackedTasksManager;
 import manager.taskmanager.TaskManager;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -58,7 +53,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void addTask() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void addTask() throws ManagerSaveException, ManagerValidateException {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
         taskManagerTest.addTask(task);
 
@@ -75,7 +70,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void addEpic() throws ManagerSaveException, ManagerTaskNotFoundException {
+    protected void addEpic() throws ManagerSaveException {
         Epic epic = new Epic(0,"Test addNewEpic", "Test addNewEpic description");
         taskManagerTest.addEpic(epic);
 
@@ -92,7 +87,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void addEpicWithSubtask() throws ManagerSaveException, ManagerTaskNotFoundException {
+    protected void addEpicWithSubtask() throws ManagerSaveException {
         Epic epic = new Epic(0,"Test addNewEpic", "Test addNewEpic description");
         taskManagerTest.addEpic(epic);
 
@@ -109,7 +104,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    void addSubtask() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    void addSubtask() throws ManagerSaveException, ManagerValidateException {
         Epic epic = new Epic(0,"Test addNewEpic", "Test addNewEpic description");
         taskManagerTest.addEpic(epic);
 
@@ -129,7 +124,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected  void updateTask() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected  void updateTask() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
         Task savedTask = taskManagerTest.getTaskObjectByID(1);
@@ -140,7 +135,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected  void updateSubtask() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected  void updateSubtask() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
         Subtask savedSubtask = taskManagerTest.getSubtaskObjectByID(5);
@@ -151,7 +146,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected  void updateEpic() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected  void updateEpic() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
         Subtask savedSubtask = taskManagerTest.getSubtaskObjectByID(5);
@@ -166,17 +161,13 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void getTaskObjectByID() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void getTaskObjectByID() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateTaskNotFoundExecutable(5)
-        );
+        Task savedTask = taskManagerTest.getTaskObjectByID(5);
+        assertNull(savedTask, "Task was found incorrect");
 
-        Assertions.assertEquals("Task not found", ex.getMessage());
-
-        Task savedTask = taskManagerTest.getTaskObjectByID(1);
+        savedTask = taskManagerTest.getTaskObjectByID(1);
         assertNotNull(savedTask, "Task not found");
 
         final List<Task> tasks = taskManagerTest.getAllTasks();
@@ -187,17 +178,13 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void getSubtaskObjectByID() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void getSubtaskObjectByID() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateSubtaskNotFoundExecutable(1)
-        );
+        Subtask savedSubtask = taskManagerTest.getSubtaskObjectByID(1);
+        assertNull(savedSubtask, "Subtask was found incorrect");
 
-        Assertions.assertEquals("Subtask not found", ex.getMessage());
-
-        Subtask savedSubtask = taskManagerTest.getSubtaskObjectByID(5);
+        savedSubtask = taskManagerTest.getSubtaskObjectByID(5);
         assertNotNull(savedSubtask, "Subtask not found");
 
         final List<Subtask> subtasks = taskManagerTest.getAllSubtasks();
@@ -210,17 +197,13 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void getEpicObjectByID() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void getEpicObjectByID() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateEpicNotFoundExecutable(6)
-        );
+        Epic savedEpic = taskManagerTest.getEpicObjectByID(6);
+        assertNull(savedEpic, "Epic was found incorrect");
 
-        Assertions.assertEquals("Epic not found", ex.getMessage());
-
-        Epic savedEpic = taskManagerTest.getEpicObjectByID(3);
+        savedEpic = taskManagerTest.getEpicObjectByID(3);
         assertNotNull(savedEpic, "Epic not found");
 
         final List<Epic> epics = taskManagerTest.getAllEpics();
@@ -247,7 +230,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void deleteAllEpics() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void deleteAllEpics() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager( taskManagerTest);
 
         taskManagerTest.deleteAllEpics();
@@ -255,7 +238,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void deleteTaskById() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void deleteTaskById() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager( taskManagerTest);
 
         Task savedTask = taskManagerTest.getTaskObjectByID(1);
@@ -270,19 +253,14 @@ abstract class TaskManagerTest <T extends TaskManager>{
         taskManagerTest.deleteTaskById(savedTask.getTaskID());
 
         history = (ArrayList<Task>) taskManagerTest.getHistory();
-
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateTaskNotFoundExecutable(savedTask.getTaskID())
-        );
-
-        Assertions.assertEquals("Task not found", ex.getMessage());
+        savedTask = taskManagerTest.getTaskObjectByID(savedTask.getTaskID());
+        assertNull(savedTask, "Task is not deleted");
 
         assertTrue(history.isEmpty(), "Task is not deleted from history");
     }
 
     @Test
-    protected void deleteSubtaskById() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void deleteSubtaskById() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager( taskManagerTest);
 
         Subtask savedSubtask = taskManagerTest.getSubtaskObjectByID(5);
@@ -297,19 +275,14 @@ abstract class TaskManagerTest <T extends TaskManager>{
         taskManagerTest.deleteSubtaskById(savedSubtask.getTaskID());
 
         history = (ArrayList<Task>) taskManagerTest.getHistory();
-
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateSubtaskNotFoundExecutable(savedSubtask.getTaskID())
-        );
-
-        Assertions.assertEquals("Subtask not found", ex.getMessage());
+        savedSubtask = taskManagerTest.getSubtaskObjectByID(savedSubtask.getTaskID());
+        assertNull(savedSubtask, "Subtask is not deleted");
 
         assertTrue(history.isEmpty(), "Subtask is not deleted from history");
     }
 
     @Test
-    protected void deleteEpicById() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void deleteEpicById() throws ManagerSaveException, ManagerValidateException {
         InMemoryTaskManagerTest.fillManager( taskManagerTest);
 
         Epic savedEpic = taskManagerTest.getEpicObjectByID(3);
@@ -324,13 +297,8 @@ abstract class TaskManagerTest <T extends TaskManager>{
         taskManagerTest.deleteEpicById(savedEpic.getTaskID());
 
         history = (ArrayList<Task>) taskManagerTest.getHistory();
-
-        ManagerTaskNotFoundException ex = Assertions.assertThrows(
-                ManagerTaskNotFoundException.class,
-                generateEpicNotFoundExecutable(savedEpic.getTaskID())
-        );
-
-        Assertions.assertEquals("Epic not found", ex.getMessage());
+        savedEpic = taskManagerTest.getEpicObjectByID(savedEpic.getTaskID());
+        assertNull(savedEpic, "Epic is not deleted");
 
         assertTrue(history.isEmpty(), "Epic is not deleted from history");
         assertTrue(taskManagerTest.getAllSubtasks().isEmpty(), "Subtasks are not deleted");
@@ -367,7 +335,7 @@ abstract class TaskManagerTest <T extends TaskManager>{
     }
 
     @Test
-    protected void getHistory() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
+    protected void getHistory() throws ManagerSaveException, ManagerValidateException {
         ArrayList<Task> getHistoryList = (ArrayList<Task>) taskManagerTest.getHistory();
         assertNotNull(getHistoryList, "The history are not returned.");
         assertTrue(getHistoryList.isEmpty(), "The history is not empty.");
@@ -406,18 +374,6 @@ abstract class TaskManagerTest <T extends TaskManager>{
 
         Subtask savedSubtask = (Subtask) ( taskManagerTest).getTask(5);
         assertNotNull(savedSubtask, "Subtask not found");
-    }
-
-    protected Executable generateTaskNotFoundExecutable(int taskID) {
-        return () -> taskManagerTest.getTaskObjectByID(taskID);
-    }
-
-    protected Executable generateSubtaskNotFoundExecutable(int taskID) {
-        return () -> taskManagerTest.getSubtaskObjectByID(taskID);
-    }
-
-    protected Executable generateEpicNotFoundExecutable(int taskID) {
-        return () -> taskManagerTest.getEpicObjectByID(taskID);
     }
 
     @Test
