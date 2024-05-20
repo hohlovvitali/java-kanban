@@ -23,6 +23,15 @@ public class Task {
         this.duration = Duration.ofMinutes(0);
     }
 
+    public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, String duration) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskID = taskID;
+        this.status = taskStatus;
+        this.startTime = startTime;
+        this.duration = Duration.parse(duration);
+    }
+
     public Task(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, Instant endTime) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -41,18 +50,30 @@ public class Task {
         this.duration = Duration.ofMinutes(0);
     }
 
+    public Task(String taskName, TaskStatus taskStatus, String taskDescription, Instant instant, Duration duration) {
+        this.taskName = taskName;
+        this.status = taskStatus;
+        this.taskDescription = taskDescription;
+        this.startTime = instant;
+        this.duration = duration;
+    }
+
+    public Task() {
+
+    }
+
     public void setStatus(TaskStatus status) {
         if (status == TaskStatus.NEW || status == TaskStatus.IN_PROGRESS || status == TaskStatus.DONE) {
             this.status = status;
         }
     }
 
-    public int getTaskID(){
+    public int getTaskID() {
         return taskID;
     }
 
     public TaskType getTaskType() {
-        if (this.getClass() == Epic.class){
+        if (this.getClass() == Epic.class) {
             return TaskType.EPIC;
         } else if (this.getClass() == Subtask.class) {
             return TaskType.SUBTASK;
@@ -61,7 +82,7 @@ public class Task {
         }
     }
 
-    public void setTaskID(int taskID){
+    public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
 
@@ -81,8 +102,8 @@ public class Task {
         this.duration = Duration.ofMinutes(duration.toMinutes());
     }
 
-    public Instant getEndTime(){
-        if (startTime == null){
+    public Instant getEndTime() {
+        if (startTime == null) {
             return null;
         }
 
@@ -90,7 +111,7 @@ public class Task {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
@@ -107,17 +128,26 @@ public class Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String output = taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
-        if (startTime != null){
+        if (startTime != null) {
             output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-        if (duration != Duration.ofMinutes(0)){
-            output += "," + LocalDateTime.ofInstant(getEndTime(), ZoneOffset.UTC).format(formatter);
+        if (duration != Duration.ofMinutes(0) && duration != null) {
+            output += "," + duration;
         }
+
         return output;
     }
 
-    public TaskStatus getStatus(){
+    public TaskStatus getStatus() {
         return status;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 }

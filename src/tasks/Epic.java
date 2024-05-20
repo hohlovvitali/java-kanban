@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> subtaskIDList;
+    private ArrayList<Integer> subtaskIDList;
     private Instant endTime;
 
     public Epic(int taskID, String taskName, String taskDescription) {
@@ -28,6 +28,13 @@ public class Epic extends Task {
         this.subtaskIDList = new ArrayList<>();
     }
 
+    public Epic(String taskName, TaskStatus taskStatus, String taskDescription) {
+        super();
+        this.taskName = taskName;
+        this.status = taskStatus;
+        this.taskDescription = taskDescription;
+    }
+
     @Override
     public Instant getEndTime() {
         return endTime;
@@ -42,23 +49,27 @@ public class Epic extends Task {
     }
 
     public void setSubtaskIDList(Integer subtaskID) {
+        if (this.subtaskIDList == null) {
+            this.subtaskIDList = new ArrayList<>();
+        }
+
         this.subtaskIDList.add(subtaskID);
     }
 
-    public void checkEpicStatus(HashMap<Integer, Subtask> subtaskHashMap){
-        if (subtaskIDList.isEmpty()){
+    public void checkEpicStatus(HashMap<Integer, Subtask> subtaskHashMap) {
+        if (subtaskIDList.isEmpty()) {
             this.status = TaskStatus.NEW;
             return;
         }
 
-        for (Integer subtaskID: subtaskIDList){
+        for (Integer subtaskID : subtaskIDList) {
             if (subtaskHashMap.get(subtaskID).getStatus() != TaskStatus.NEW) {
                 this.status = TaskStatus.IN_PROGRESS;
                 break;
             }
         }
 
-        for (Integer subtaskID: subtaskIDList){
+        for (Integer subtaskID : subtaskIDList) {
             if (subtaskHashMap.get(subtaskID).getStatus() != TaskStatus.DONE) {
                 return;
             }
@@ -67,11 +78,11 @@ public class Epic extends Task {
         this.status = TaskStatus.DONE;
     }
 
-    public void deleteAllSubtaskID(){
+    public void deleteAllSubtaskID() {
         this.subtaskIDList.clear();
     }
 
-    public void deleteSubtaskID(int subtaskID){
+    public void deleteSubtaskID(int subtaskID) {
         this.subtaskIDList.remove(subtaskIDList.indexOf(subtaskID));
     }
 
@@ -79,18 +90,18 @@ public class Epic extends Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String output = taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
-        if (startTime != null){
+        if (startTime != null) {
             output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-        if (endTime != null){
+        if (endTime != null) {
             output += "," + LocalDateTime.ofInstant(endTime, ZoneOffset.UTC).format(formatter);
         }
         return output;
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;

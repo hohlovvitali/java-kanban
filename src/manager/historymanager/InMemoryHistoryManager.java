@@ -15,24 +15,24 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node<Task> tail;
 
     @Override
-    public void add(Task task){
+    public void add(Task task) {
         remove(task.getTaskID());
         Node<Task> newNode = linkLast(task);
-        if (head == null){
+        if (head == null) {
             head = newNode;
         }
         taskHistory.put(task.getTaskID(), newNode);
     }
 
     @Override
-    public void remove(int id){
-        if (taskHistory.containsKey(id)){
+    public void remove(int id) {
+        if (taskHistory.containsKey(id)) {
             Node<Task> currentNode = taskHistory.get(id);
-            if (currentNode.getPrev() == null){
+            if (currentNode.getPrev() == null) {
                 head = currentNode.getNext();
             }
 
-            if (currentNode.getNext() == null){
+            if (currentNode.getNext() == null) {
                 tail = currentNode.getPrev();
             }
             Node.removeNode(currentNode);
@@ -43,8 +43,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getTasks() {
         List<Task> tasksList = new ArrayList<>();
-        Node<Task> currentNode= head;
-        while (currentNode != null){
+        Node<Task> currentNode = head;
+        while (currentNode != null) {
             tasksList.add(currentNode.getData());
             currentNode = currentNode.getNext();
         }
@@ -52,9 +52,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasksList;
     }
 
-    private Node<Task> linkLast(Task task){
+    private Node<Task> linkLast(Task task) {
         Node<Task> newTail = new Node<>(task, this.tail);
-        if(this.tail != null){
+        if (this.tail != null) {
             this.tail.setNext(newTail);
         }
         this.tail = newTail;
@@ -92,16 +92,16 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.next = next;
         }
 
-        public static void removeNode(Node<Task> task){
+        public static void removeNode(Node<Task> task) {
             if (task.getPrev() != null) {
                 task.getPrev().setNext(task.getNext());
-            } else if (task.getNext() != null){
+            } else if (task.getNext() != null) {
                 task.getNext().setPrev(null);
             }
 
-            if (task.getNext() != null){
+            if (task.getNext() != null) {
                 task.getNext().setPrev(task.getPrev());
-            } else if (task.getPrev() != null){
+            } else if (task.getPrev() != null) {
                 task.getPrev().setNext(null);
             }
         }

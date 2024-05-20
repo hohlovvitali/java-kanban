@@ -1,6 +1,7 @@
 package manager.taskmanager;
 
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import tasks.*;
 
@@ -23,23 +24,23 @@ public interface TaskManager {
 
     Task getTask(int taskID);
 
-    Epic getEpicObjectByID(int epicID) throws ManagerSaveException;
+    Epic getEpicObjectByID(int epicID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
-    Task getTaskObjectByID(int taskID) throws ManagerSaveException;
+    Task getTaskObjectByID(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
-    Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException;
+    Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
     void deleteAllTasks();
 
     void deleteAllSubtasks();
 
-    void deleteAllEpics() throws ManagerSaveException;
+    void deleteAllEpics() throws ManagerSaveException, ManagerTaskNotFoundException;
 
-    void deleteTaskById(int taskID) throws ManagerSaveException;
+    void deleteTaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
-    void deleteSubtaskById(int taskID) throws ManagerSaveException;
+    void deleteSubtaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
-    void deleteEpicById(int taskID) throws ManagerSaveException;
+    void deleteEpicById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException;
 
     ArrayList<Task> getAllTasks();
 
@@ -50,4 +51,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     boolean equals(Object o);
+
+    List<Task> getPrioritizedTasks();
 }

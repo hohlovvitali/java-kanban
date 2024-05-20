@@ -1,5 +1,6 @@
 import manager.Managers;
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import manager.taskmanager.InMemoryTaskManager;
 import tasks.*;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws ManagerSaveException, ManagerValidateException {
+    public static void main(String[] args) throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
         InMemoryTaskManager manager = (InMemoryTaskManager) Managers.getDefault();
         // Проверяем создание классов task.Task
         Task task1 = new Task("Подняться", "Первое задание");
@@ -33,13 +34,13 @@ public class Main {
 
 
         Scanner scanner = new Scanner(System.in);
-        while (true){
+        while (true) {
             printMenu();
 
             System.out.println("Выберите команду");
             int command = scanner.nextInt();
 
-            switch (command){
+            switch (command) {
                 case 1:
                     // Вывод эпиков
                     System.out.println(manager.getAllEpics());
@@ -135,9 +136,9 @@ public class Main {
         System.out.println("0 - Выход");
     }
 
-    public static void showHistoryID(ArrayList<Task> taskHistory){
+    public static void showHistoryID(ArrayList<Task> taskHistory) {
         ArrayList<Integer> taskHistoryID = new ArrayList<>();
-        for (Task task: taskHistory){
+        for (Task task : taskHistory) {
             taskHistoryID.add(task.getTaskID());
         }
 

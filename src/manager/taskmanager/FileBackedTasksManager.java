@@ -1,6 +1,8 @@
 package manager.taskmanager;
+
 import manager.historymanager.HistoryManager;
 import manager.managerexception.ManagerSaveException;
+import manager.managerexception.ManagerTaskNotFoundException;
 import manager.managerexception.ManagerValidateException;
 import tasks.*;
 
@@ -14,7 +16,7 @@ import java.util.List;
 import java.nio.charset.StandardCharsets;
 
 
-public class FileBackedTasksManager extends InMemoryTaskManager{
+public class FileBackedTasksManager extends InMemoryTaskManager {
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -24,23 +26,23 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 
     public static FileBackedTasksManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
-        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))){
+        try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             br.readLine();
 
-            while (br.ready()){
+            while (br.ready()) {
                 String line = br.readLine();
-                if (line.isBlank()){
+                if (line.isBlank()) {
                     line = br.readLine();
-                    if (line!= null && !line.isBlank()){
+                    if (line != null && !line.isBlank()) {
                         List<Integer> taskHistoryID = FileBackedTasksManager.historyFromString(line);
 
-                        for (Integer taskID: taskHistoryID){
+                        for (Integer taskID : taskHistoryID) {
                             tasksManager.taskMemory.add(tasksManager.getTask(taskID));
                         }
                     }
                 } else {
                     Task task = tasksManager.fromString(line);
-                    if (task.getTaskType() == TaskType.TASK){
+                    if (task.getTaskType() == TaskType.TASK) {
                         tasksManager.addTaskWithID(task);
                     } else if (task.getTaskType() == TaskType.SUBTASK) {
                         tasksManager.addSubtaskWithID((Subtask) task);
@@ -57,10 +59,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     public void save() throws ManagerSaveException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             bw.write("id,type,name,status,description,epic\n");
 
-            for (Integer taskID: tasksIDList){
+            for (Integer taskID : tasksIDList) {
                 Task task = this.getTask(taskID);
                 bw.write(this.taskObjectToString(task) + "\n");
             }
@@ -109,46 +111,46 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     @Override
-    public void deleteTaskById(int taskID) throws ManagerSaveException {
+    public void deleteTaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteTaskById(taskID);
         save();
     }
 
     @Override
-    public void deleteSubtaskById(int taskID) throws ManagerSaveException {
+    public void deleteSubtaskById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteSubtaskById(taskID);
         save();
     }
 
     @Override
-    public void deleteEpicById(int taskID) throws ManagerSaveException {
+    public void deleteEpicById(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         super.deleteEpicById(taskID);
         save();
     }
 
     @Override
-    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException {
+    public Epic getEpicObjectByID(int epicID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Epic epic = super.getEpicObjectByID(epicID);
         save();
         return epic;
     }
 
     @Override
-    public Task getTaskObjectByID(int taskID) throws ManagerSaveException {
+    public Task getTaskObjectByID(int taskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Task task = super.getTaskObjectByID(taskID);
         save();
         return task;
     }
 
     @Override
-    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException {
+    public Subtask getSubtaskObjectByID(int subtaskID) throws ManagerSaveException, ManagerTaskNotFoundException {
         Subtask subtask = super.getSubtaskObjectByID(subtaskID);
         save();
         return subtask;
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
@@ -161,20 +163,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String outString = "Path: " + this.file.getPath() + "\n";
-        for (Integer taskID: tasksIDList){
+        for (Integer taskID : tasksIDList) {
             Task task = this.getTask(taskID);
             outString = outString + this.taskObjectToString(task) + "\n";
         }
 
         outString = outString + "\n";
-        outString= outString + "History: " + FileBackedTasksManager.historyToString(this.taskMemory);
+        outString = outString + "History: " + FileBackedTasksManager.historyToString(this.taskMemory);
 
         return outString;
     }
 
-    private void addTaskWithID(Task task){
+    private void addTaskWithID(Task task) {
         taskHashMap.put(task.getTaskID(), task);
         tasksIDList.add(task.getTaskID());
     }
@@ -191,28 +193,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         tasksIDList.add(subtask.getTaskID());
     }
 
-    private Task fromString(String value){
+    private Task fromString(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
         String[] lineValues = value.split(",");
-        if(lineValues.length >= 7){
-            if (lineValues[1].equals(TaskType.TASK.toString())){
-                return new Task(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
+        if (lineValues.length >= 7) {
+            if (lineValues[1].equals(TaskType.TASK.toString())) {
+                return new Task(Integer.parseInt(lineValues[0]), lineValues[2], (TaskStatus.valueOf(lineValues[3])),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
-                        LocalDateTime.parse(lineValues[6], formatter).toInstant(ZoneOffset.UTC));
+                        lineValues[6]);
             } else if (lineValues[1].equals(TaskType.SUBTASK.toString())) {
                 return new Subtask(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
-                        LocalDateTime.parse(lineValues[6], formatter).toInstant(ZoneOffset.UTC),
-                        Integer.parseInt(lineValues[7]));
+                        lineValues[6], Integer.parseInt(lineValues[7]));
             } else {
                 return new Epic(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
                         lineValues[4], LocalDateTime.parse(lineValues[5], formatter).toInstant(ZoneOffset.UTC),
                         LocalDateTime.parse(lineValues[6], formatter).toInstant(ZoneOffset.UTC));
             }
-        }
-        else {
-            if (lineValues[1].equals(TaskType.TASK.toString())){
+        } else {
+            if (lineValues[1].equals(TaskType.TASK.toString())) {
                 return new Task(Integer.parseInt(lineValues[0]), lineValues[2], TaskStatus.valueOf(lineValues[3]),
                         lineValues[4]);
             } else if (lineValues[1].equals(TaskType.SUBTASK.toString())) {
@@ -226,18 +226,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     private static String historyToString(HistoryManager manager) {
-        ArrayList<String> tasksIdHistory= new ArrayList<>();
-        for (Task task: manager.getTasks()){
+        ArrayList<String> tasksIdHistory = new ArrayList<>();
+        for (Task task : manager.getTasks()) {
             tasksIdHistory.add(Integer.toString(task.getTaskID()));
         }
 
         return String.join(",", tasksIdHistory);
     }
 
-    private static List<Integer> historyFromString(String value){
+    private static List<Integer> historyFromString(String value) {
         String[] historyArray = value.split(",");
-        List<Integer> historyList= new ArrayList<>();
-        for (String id: historyArray){
+        List<Integer> historyList = new ArrayList<>();
+        for (String id : historyArray) {
             historyList.add(Integer.parseInt(id));
         }
 
@@ -245,8 +245,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
 
-    private String taskObjectToString(Task task){
-        if (task.getTaskType() == TaskType.TASK){
+    private String taskObjectToString(Task task) {
+        if (task.getTaskType() == TaskType.TASK) {
             return task.toString();
         } else if (task.getTaskType() == TaskType.EPIC) {
             Epic epic = (Epic) task;

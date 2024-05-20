@@ -16,7 +16,7 @@ class InMemoryHistoryManagerTest {
 
     private final Task taskHead = new Task(1, "TestTaskHead", TaskStatus.NEW, "TestTaskHead description");
 
-    private static void fillHistoryManager(InMemoryHistoryManager historyManager){
+    private static void fillHistoryManager(InMemoryHistoryManager historyManager) {
         Task task1 = new Task(2, "TestTask1", TaskStatus.NEW, "TestTask1 description");
         Task task2 = new Task(3, "TestTask2", TaskStatus.NEW, "TestTask2 description");
         Task taskTail = new Task(4, "TestTaskTail", TaskStatus.NEW, "TestTaskTail description");
@@ -26,7 +26,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         inMemoryHistoryManagerTest = new InMemoryHistoryManager();
     }
 
