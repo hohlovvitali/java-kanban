@@ -48,16 +48,16 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private EpicEndpoint getEndpoint(String requestPath, String requestMethod){
+    private EpicEndpoint getEndpoint(String requestPath, String requestMethod) {
         String[] pathSplit = requestPath.split("/");
 
-        switch (requestMethod){
+        switch (requestMethod) {
             case "DELETE":
                 return EpicEndpoint.DELETE_EPIC;
             case "POST":
                 return EpicEndpoint.POST_EPIC;
             case "GET":
-                if (pathSplit.length == 2 && pathSplit[1].equals("epics")){
+                if (pathSplit.length == 2 && pathSplit[1].equals("epics")) {
                     return EpicEndpoint.GET_EPICS;
                 } else if (pathSplit.length == 3 && pathSplit[1].equals("epics")) {
                     return EpicEndpoint.GET_EPIC;
@@ -71,7 +71,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     private void deleteEpic(HttpExchange exchange) throws IOException {
         Optional<Integer> epicID = getTaskID(exchange);
-        if(epicID.isEmpty()){
+        if (epicID.isEmpty()) {
             sendNotFound(exchange, "Не указан id эпика для удаления");
             return;
         }
@@ -79,7 +79,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         try {
             taskManager.deleteEpicById(epicID.get());
             sendText(exchange, "Epic с номером " + epicID.get() + " был удален");
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Epic с номером " + epicID.get() + " не существует");
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -89,13 +89,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void postEpic(HttpExchange exchange) throws IOException{
+    private void postEpic(HttpExchange exchange) throws IOException {
         try {
             String request = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
             Epic epic = gson.fromJson(request, Epic.class);
             taskManager.addEpic(epic);
             sendText(exchange, "Epic добавлен");
-        } catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e) {
             sendIncorrectJsonError(exchange);
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -112,13 +112,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     private void getEpic(HttpExchange exchange) throws IOException, ManagerTaskNotFoundException, ManagerSaveException {
         Optional<Integer> epicID = getTaskID(exchange);
         try {
-            if(epicID.isEmpty()){
+            if (epicID.isEmpty()) {
                 sendNotFound(exchange, "Некорректный id эпика для получения");
                 return;
             }
 
             sendText(exchange, gson.toJson(taskManager.getEpicObjectByID(epicID.get())));
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Epic с номером " + epicID.get() + " не существует");
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -131,13 +131,13 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     private void getEpicSubtasks(HttpExchange exchange) throws IOException {
         Optional<Integer> epicID = getTaskID(exchange);
         try {
-            if(epicID.isEmpty()){
+            if (epicID.isEmpty()) {
                 sendNotFound(exchange, "Некорректный id эпика для получения");
                 return;
             }
 
             sendText(exchange, gson.toJson(taskManager.getEpicObjectByID(epicID.get()).getSubtaskIDList()));
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Epic с номером " + epicID.get() + " не существует");
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");

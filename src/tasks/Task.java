@@ -68,12 +68,12 @@ public class Task {
         }
     }
 
-    public int getTaskID(){
+    public int getTaskID() {
         return taskID;
     }
 
     public TaskType getTaskType() {
-        if (this.getClass() == Epic.class){
+        if (this.getClass() == Epic.class) {
             return TaskType.EPIC;
         } else if (this.getClass() == Subtask.class) {
             return TaskType.SUBTASK;
@@ -82,7 +82,7 @@ public class Task {
         }
     }
 
-    public void setTaskID(int taskID){
+    public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
 
@@ -102,8 +102,8 @@ public class Task {
         this.duration = Duration.ofMinutes(duration.toMinutes());
     }
 
-    public Instant getEndTime(){
-        if (startTime == null){
+    public Instant getEndTime() {
+        if (startTime == null) {
             return null;
         }
 
@@ -111,7 +111,7 @@ public class Task {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
@@ -128,18 +128,18 @@ public class Task {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String output = taskID + "," + this.getTaskType() + "," + taskName + "," + status + "," + taskDescription;
-        if (startTime != null){
+        if (startTime != null) {
             output += "," + LocalDateTime.ofInstant(startTime, ZoneOffset.UTC).format(formatter);
         }
 
-        if (duration != Duration.ofMinutes(0) && duration != null){
+        if (duration != Duration.ofMinutes(0) && duration != null) {
             output += "," + duration;
         }
 
         return output;
     }
 
-    public TaskStatus getStatus(){
+    public TaskStatus getStatus() {
         return status;
     }
 

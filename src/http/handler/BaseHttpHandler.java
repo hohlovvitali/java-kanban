@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
-public class BaseHttpHandler{
+public class BaseHttpHandler {
     protected final TaskManager taskManager;
     protected static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     protected static final Gson gson = new GsonBuilder()
@@ -59,9 +59,9 @@ public class BaseHttpHandler{
         h.close();
     }
 
-    protected Optional<Integer> getTaskID(HttpExchange exchange){
+    protected Optional<Integer> getTaskID(HttpExchange exchange) {
         String[] pathParts = exchange.getRequestURI().getPath().split("/");
-        if (pathParts.length == 2){
+        if (pathParts.length == 2) {
             return Optional.empty();
         }
 

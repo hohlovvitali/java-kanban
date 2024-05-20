@@ -13,7 +13,7 @@ public class Subtask extends Task {
 
 
     public Subtask(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, Instant endTime, int epicID) {
-        super(taskID, taskName, taskStatus, taskDescription,startTime, endTime);
+        super(taskID, taskName, taskStatus, taskDescription, startTime, endTime);
         this.epicID = epicID;
     }
 
@@ -23,7 +23,7 @@ public class Subtask extends Task {
     }
 
     public Subtask(int taskID, String taskName, TaskStatus taskStatus, String taskDescription, Instant startTime, String duration, int epicID) {
-        super(taskID,taskName,taskStatus,taskDescription,startTime,duration);
+        super(taskID, taskName, taskStatus, taskDescription, startTime, duration);
         this.epicID = epicID;
     }
 
@@ -41,7 +41,7 @@ public class Subtask extends Task {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;

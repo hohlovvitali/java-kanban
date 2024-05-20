@@ -57,7 +57,7 @@ public class HttpTaskManagerTasksTest {
 
     @Test
     public void testAddTask() throws IOException, InterruptedException {
-        Task task = new Task("TestTask 1", TaskStatus.NEW,"TestTask 1 description",
+        Task task = new Task("TestTask 1", TaskStatus.NEW, "TestTask 1 description",
                 LocalDateTime.parse("2015.05.22 12:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60));
 
         String taskJson = gson.toJson(task);
@@ -80,7 +80,7 @@ public class HttpTaskManagerTasksTest {
     @Test
     public void testAddEpic() throws IOException, InterruptedException {
 
-        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW,"EpicTest 1 description");
+        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW, "EpicTest 1 description");
 
         String epicJson = gson.toJson(epic1);
 
@@ -102,9 +102,9 @@ public class HttpTaskManagerTasksTest {
     @Test
     public void testAddSubtask() throws IOException, InterruptedException {
 
-        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW,"EpicTest 1 description");
+        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW, "EpicTest 1 description");
 
-        Subtask subtask1 = new Subtask("TestSubtask 1", TaskStatus.NEW,"TestSubtask 1 description",
+        Subtask subtask1 = new Subtask("TestSubtask 1", TaskStatus.NEW, "TestSubtask 1 description",
                 LocalDateTime.parse("2015.05.20 12:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60), 1);
 
         String epicJson = gson.toJson(epic1);
@@ -117,7 +117,7 @@ public class HttpTaskManagerTasksTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
-        URI urlSubtask= URI.create(urlHost + "subtasks");
+        URI urlSubtask = URI.create(urlHost + "subtasks");
         request = HttpRequest.newBuilder().uri(urlSubtask).POST(HttpRequest.BodyPublishers.ofString(subtaskJson)).build();
 
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -265,7 +265,7 @@ public class HttpTaskManagerTasksTest {
     public void updateSubtaskAndEpicByID() throws ManagerSaveException, ManagerValidateException, IOException, InterruptedException {
         fillManager(manager);
 
-        Subtask subtask = new Subtask("TestSubtask 1", TaskStatus.DONE,"TestSubtask 1 description",
+        Subtask subtask = new Subtask("TestSubtask 1", TaskStatus.DONE, "TestSubtask 1 description",
                 LocalDateTime.parse("2015.05.20 12:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60), 3);
 
         subtask.setTaskID(5);
@@ -297,7 +297,7 @@ public class HttpTaskManagerTasksTest {
     public void testAddTaskWithInteractions() throws IOException, InterruptedException, ManagerSaveException, ManagerValidateException {
         fillManager(manager);
 
-        Task task = new Task("TestTask 3", TaskStatus.NEW,"TestTask 3 description",
+        Task task = new Task("TestTask 3", TaskStatus.NEW, "TestTask 3 description",
                 LocalDateTime.parse("2015.05.22 12:30", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60));
 
         String taskJson = gson.toJson(task);
@@ -314,7 +314,7 @@ public class HttpTaskManagerTasksTest {
     public void testAddSubtaskWithInteractions() throws IOException, InterruptedException, ManagerSaveException, ManagerValidateException {
         fillManager(manager);
 
-        Subtask subtask = new Subtask("TestSubtask 1", TaskStatus.NEW,"TestSubtask 1 description",
+        Subtask subtask = new Subtask("TestSubtask 1", TaskStatus.NEW, "TestSubtask 1 description",
                 LocalDateTime.parse("2015.05.20 12:30", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60), 3);
 
         String taskJson = gson.toJson(subtask);
@@ -423,22 +423,22 @@ public class HttpTaskManagerTasksTest {
     private static void fillManager(TaskManager taskManagerTest) throws ManagerSaveException, ManagerValidateException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
-        Task task1 = new Task("TestTask 1", TaskStatus.NEW,"TestTask 1 description",
+        Task task1 = new Task("TestTask 1", TaskStatus.NEW, "TestTask 1 description",
                 LocalDateTime.parse("2015.05.22 12:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60));
         taskManagerTest.addTask(task1);
 
-        Task task2 = new Task("TestTask 2", TaskStatus.NEW,"TestTask 2 description",
+        Task task2 = new Task("TestTask 2", TaskStatus.NEW, "TestTask 2 description",
                 LocalDateTime.parse("2015.05.22 13:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(75));
         taskManagerTest.addTask(task2);
 
-        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW,"EpicTest 1 description");
-        Epic epic2 = new Epic("EpicTest 2", TaskStatus.NEW,"EpicTest 2 description");
+        Epic epic1 = new Epic("EpicTest 1", TaskStatus.NEW, "EpicTest 1 description");
+        Epic epic2 = new Epic("EpicTest 2", TaskStatus.NEW, "EpicTest 2 description");
         taskManagerTest.addEpic(epic1);
         taskManagerTest.addEpic(epic2);
 
-        Subtask subtask1 = new Subtask("TestSubtask 1", TaskStatus.NEW,"TestSubtask 1 description",
+        Subtask subtask1 = new Subtask("TestSubtask 1", TaskStatus.NEW, "TestSubtask 1 description",
                 LocalDateTime.parse("2015.05.20 12:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(60), 3);
-        Subtask subtask2 = new Subtask("TestSubtask 2", TaskStatus.NEW,"TestSubtask 2 description",
+        Subtask subtask2 = new Subtask("TestSubtask 2", TaskStatus.NEW, "TestSubtask 2 description",
                 LocalDateTime.parse("2015.05.21 16:00", formatter).toInstant(ZoneOffset.UTC), Duration.ofMinutes(75), 3);
         taskManagerTest.addSubtask(subtask1);
         taskManagerTest.addSubtask(subtask2);

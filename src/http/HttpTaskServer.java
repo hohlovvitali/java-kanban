@@ -38,12 +38,12 @@ public class HttpTaskServer {
         return HttpTaskServer.gson;
     }
 
-    public void start(){
+    public void start() {
         httpServer.start();
         System.out.println("HTTP-сервер запущен на " + PORT + " порту.");
     }
 
-    public void stop(){
+    public void stop() {
         httpServer.stop(0);
         System.out.println("HTTP-сервер остановлен");
     }

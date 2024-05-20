@@ -48,16 +48,16 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private SubtaskEndpoint getEndpoint(String requestPath, String requestMethod){
+    private SubtaskEndpoint getEndpoint(String requestPath, String requestMethod) {
         String[] pathSplit = requestPath.split("/");
 
-        switch (requestMethod){
+        switch (requestMethod) {
             case "DELETE":
                 return SubtaskEndpoint.DELETE_SUBTASK;
             case "POST":
                 return SubtaskEndpoint.POST_SUBTASK;
             case "GET":
-                if (pathSplit.length == 2 && pathSplit[1].equals("subtasks")){
+                if (pathSplit.length == 2 && pathSplit[1].equals("subtasks")) {
                     return SubtaskEndpoint.GET_SUBTASKS;
                 } else if (pathSplit.length == 3 && pathSplit[1].equals("subtasks")) {
                     return SubtaskEndpoint.GET_SUBTASK;
@@ -69,7 +69,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private void deleteSubtask(HttpExchange exchange) throws IOException {
         Optional<Integer> taskID = getTaskID(exchange);
-        if(taskID.isEmpty()){
+        if (taskID.isEmpty()) {
             sendNotFound(exchange, "Не указан id эпика для удаления");
             return;
         }
@@ -77,7 +77,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
         try {
             taskManager.deleteSubtaskById(taskID.get());
             sendText(exchange, "Subtask с номером " + taskID.get() + " был удален");
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Subtask с номером " + taskID.get() + " не существует");
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -87,13 +87,13 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
         }
     }
 
-    private void postSubtask(HttpExchange exchange) throws IOException{
+    private void postSubtask(HttpExchange exchange) throws IOException {
         Optional<Integer> taskID = getTaskID(exchange);
 
         try {
             String request = new String(exchange.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
             Subtask subtask = gson.fromJson(request, Subtask.class);
-            if (taskID.isEmpty()){
+            if (taskID.isEmpty()) {
                 taskManager.addSubtask(subtask);
                 sendText(exchange, "Subtask добавлен");
             } else {
@@ -104,14 +104,14 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 exchange.sendResponseHeaders(201, 0);
                 exchange.close();
             }
-        } catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e) {
             sendIncorrectJsonError(exchange);
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
             exchange.sendResponseHeaders(500, 0);
             exchange.close();
             throw new RuntimeException(e);
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Subtask с номером " + taskID.get() + " не существует");
         } catch (ManagerValidateException e) {
             String output = "";
@@ -127,13 +127,13 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
     private void getSubtask(HttpExchange exchange) throws IOException, ManagerTaskNotFoundException, ManagerSaveException {
         Optional<Integer> taskID = getTaskID(exchange);
         try {
-            if(taskID.isEmpty()){
+            if (taskID.isEmpty()) {
                 sendNotFound(exchange, "Некорректный id эпика для получения");
                 return;
             }
 
             sendText(exchange, gson.toJson(taskManager.getSubtaskObjectByID(taskID.get())));
-        } catch (ManagerTaskNotFoundException e){
+        } catch (ManagerTaskNotFoundException e) {
             sendNotFound(exchange, "Subtask с номером " + taskID.get() + " не существует");
         } catch (ManagerSaveException e) {
             exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");

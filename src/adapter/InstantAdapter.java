@@ -14,7 +14,7 @@ public class InstantAdapter extends TypeAdapter<Instant> {
 
     @Override
     public void write(JsonWriter jsonWriter, Instant instant) throws IOException {
-        if(instant == null){
+        if (instant == null) {
             jsonWriter.nullValue();
             return;
         }
@@ -24,7 +24,7 @@ public class InstantAdapter extends TypeAdapter<Instant> {
 
     @Override
     public Instant read(JsonReader jsonReader) throws IOException {
-        if(jsonReader.peek() == JsonToken.NULL){
+        if (jsonReader.peek() == JsonToken.NULL) {
             jsonReader.nextNull();
             return null;
         }

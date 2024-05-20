@@ -20,18 +20,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
+class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         taskManagerTest = (InMemoryTaskManager) Managers.getDefault();
     }
 
     @Test
     public void getSubtaskObjectByIDNotMemory() throws ManagerSaveException, ManagerValidateException {
-        InMemoryTaskManagerTest.fillManager( taskManagerTest);
+        InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
-        Subtask savedTask = ( taskManagerTest).getSubtaskObjectByIDNotMemory(5);
+        Subtask savedTask = (taskManagerTest).getSubtaskObjectByIDNotMemory(5);
         assertNotNull(savedTask, "Subtask not found");
 
         ArrayList<Task> getHistoryList = (ArrayList<Task>) taskManagerTest.getHistory();
@@ -60,10 +60,11 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
                 taskManagerTest.getTask(6));
         assertEquals(taskList, checkList, "Tasks List isn't correct");
     }
+
     @Test
     public void shouldThrowExceptionForLoadFromFileWithSameStartTime() throws ManagerSaveException, ManagerValidateException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-        InMemoryTaskManagerTest.fillManager( taskManagerTest);
+        InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
         Task task = taskManagerTest.getTask(2);
         task.setStartTime(LocalDateTime.parse("2015.05.22 12:10", formatter).toInstant(ZoneOffset.UTC));
@@ -79,7 +80,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager>{
     @Test
     public void shouldThrowExceptionForLoadFromFileBetweenStartAndEndTime() throws ManagerSaveException, ManagerValidateException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-        InMemoryTaskManagerTest.fillManager( taskManagerTest);
+        InMemoryTaskManagerTest.fillManager(taskManagerTest);
 
         Task task = taskManagerTest.getTask(2);
         task.setStartTime(LocalDateTime.parse("2015.05.22 12:00", formatter).toInstant(ZoneOffset.UTC));

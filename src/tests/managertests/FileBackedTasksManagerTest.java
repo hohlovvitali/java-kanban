@@ -25,18 +25,19 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
     private final File file = new File("resources\\taskManagerTest.txt");
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         taskManagerTest = new FileBackedTasksManager(file);
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         try {
             Files.delete(file.toPath());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
     @Test
     void loadFromFileStandardBehavior() throws ManagerSaveException, ManagerValidateException, ManagerTaskNotFoundException {
         fillManager(taskManagerTest);
@@ -126,6 +127,7 @@ class FileBackedTasksManagerTest extends InMemoryTaskManagerTest {
 
         assertEquals(managerRetunredString, correctString, "Returned string isn't correct");
     }
+
     private static void fillHistoryManager(TaskManager manager) throws ManagerSaveException, ManagerTaskNotFoundException {
         manager.getEpicObjectByID(3);
         manager.getEpicObjectByID(4);
